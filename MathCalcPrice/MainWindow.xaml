@@ -7,6 +7,25 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-            
+        <StackPanel>
+            <Grid Margin="10,5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock FontFamily="Roboto" FontSize="16" Grid.Column="0"></TextBlock>
+                <Button FontFamily="Roboto" FontSize="16" Grid.Column="1">Указать путь до файла</Button>
+            </Grid>
+            <Label FontSize="18" FontFamily="Roboto" Foreground="Black">Объекты для обновления</Label>
+            <ListView>
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Имя объекта"/>
+                        <GridViewColumn Header="Столбцы"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <Button Click="Button_Click" FontSize="25" >CREATE</Button>
+        </StackPanel>
     </Grid>
 </Window>

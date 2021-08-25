@@ -21,7 +21,6 @@ namespace MathCalcPrice.RevitsUtils
                 DbName = Path.Combine(path, DbName);
             Db = new LiteDatabase(DbName);
             _exist = true;
-
         }
 
 

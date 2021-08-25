@@ -24,14 +24,22 @@ namespace MathCalcPrice
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             UIApplication uiApp = commandData.Application;
+            LinkFile linkFile = new LinkFile(uiApp.ActiveUIDocument.Document);
 
             Thread thread = new Thread(() => {
-                Window window = new MainWindow(uiApp);
+                Window window = new MainWindow(linkFile);
                 window.ShowDialog();
             });
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
             thread.Join();
+
+            thread.Abort();
+
+            if(thread.IsAlive)
+            {
+                thread.Abort();
+            }
 
             return Result.Succeeded;
         }

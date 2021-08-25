@@ -8,7 +8,7 @@ namespace MathCalcPrice.Service.Interfaces
     {
         bool Create(List<AnnexElement> annex, int countOfThreads = 3);
         string Save(string path);
-        bool Update(string path, string objectNameToUpdate, List<CalculatorUpdateEntity> calculatorUpdateEntities);
+        bool Update(string path, string objectNameToUpdate, List<CalculatorUpdateEntity> calculatorUpdateEntities, string Path);
         MaterialsDB Get_db();
     }
 }

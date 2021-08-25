@@ -29,7 +29,6 @@ namespace MathCalcPrice.Service
 
         public CalculatorTemplate(string pathToTemplate)
         {
-            _db = Get_db();
             _pathToTemplate = pathToTemplate;
         }
 
@@ -46,8 +45,9 @@ namespace MathCalcPrice.Service
                 line = WriteMainInformation(worksheet, line);
 
                 p.SaveAs(new System.IO.FileInfo(path));
+
+                Update(_pathToTemplate, "", _calculatorUpdateEntities, Path);
             }
-            //Update(_pathToTemplate, "", _calculatorUpdateEntities);
             return path;
         }
 
@@ -64,8 +64,9 @@ namespace MathCalcPrice.Service
             }
         }
 
-        public bool Update(string template, string realObjectName, List<CalculatorUpdateEntity> data)
+        public bool Update(string template, string realObjectName, List<CalculatorUpdateEntity> data, string Path)
         {
+            var path = System.IO.Path.ChangeExtension(Path.TrimEnd('.') + "OLEG.", "xlsx");
             using (var p = new ExcelPackage(new System.IO.FileInfo(template)))
             {
                 Dictionary<int, string> WorkNames = new Dictionary<int, string>();
@@ -100,8 +101,7 @@ namespace MathCalcPrice.Service
                             }
                         }
                     }
-                    p.SaveAs(new System.IO.FileInfo($"{template}.temp"));
-                    System.IO.File.Replace($"{template}.temp", template, null);
+                    p.SaveAs(new System.IO.FileInfo(path));
                 }
             }
 
@@ -200,7 +200,6 @@ namespace MathCalcPrice.Service
                 }
             }
         }
-
         public MaterialsDB Get_db()
         {
             ExcelDataService dataService = new ExcelDataService();
