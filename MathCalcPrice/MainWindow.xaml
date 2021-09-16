@@ -8,7 +8,6 @@
     <Window.DataContext>
         <VM:MainWindowViewModel/>
     </Window.DataContext>
-
     <Grid>
         <StackPanel>
             <Grid Margin="10,5">
@@ -44,13 +43,8 @@
 
             <Button Click="Button_Click" FontSize="25">CREATE</Button>
 
-           
+
             <Ellipse Margin="0,25,0,0" Height="150" Width="150">
-                <Ellipse.RenderTransform>
-                    <RotateTransform x:Name="rotate"
-                         CenterX="75"
-                         CenterY="75"/>
-                </Ellipse.RenderTransform>
                 <Ellipse.Triggers>
                     <EventTrigger RoutedEvent="Loaded">
                         <BeginStoryboard>
@@ -62,6 +56,13 @@
                         </BeginStoryboard>
                     </EventTrigger>
                 </Ellipse.Triggers>
+
+                <Ellipse.RenderTransform>
+                    <RotateTransform x:Name="rotate"
+                             CenterX="75"
+                             CenterY="75"/>
+                </Ellipse.RenderTransform>
+
                 <Ellipse.Fill>
                     <ImageBrush ImageSource="C:\Users\Ippolitov\Desktop\kF0rCq9KdW8.png"/>
                 </Ellipse.Fill>
