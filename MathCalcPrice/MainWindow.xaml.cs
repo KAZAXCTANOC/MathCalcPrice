@@ -1,7 +1,4 @@
-﻿using Autodesk.Revit.Attributes;
-using Autodesk.Revit.DB;
-using Autodesk.Revit.UI;
-using Google.Apis.Download;
+﻿using Google.Apis.Download;
 using MathCalcPrice.Entity;
 using MathCalcPrice.RevitsUtils;
 using MathCalcPrice.Service;
@@ -12,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media.Animation;
 
 namespace MathCalcPrice
 {
@@ -20,7 +18,7 @@ namespace MathCalcPrice
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly Entity.Settings _settings = new Entity.Settings();
+        private readonly Settings _settings = new Entity.Settings();
         private LinkFile _mainFile;
         public CalculatorTemplate wr = new CalculatorTemplate(Paths.CalcDbTemplateExcelPath);
         private MaterialsDB _db;
@@ -63,12 +61,12 @@ namespace MathCalcPrice
 
                     var raw = ext.Work(doc.Doc, _db);
                     var result = annex.ElementsHandling(raw.elems.Where(x => x.Valid).ToList(), _settings);
-                    sl.Lock(); // thread safe
+                    sl.Lock(); 
                     count++;
                     rawAnnex.Add(result.result);
                     rawNonValid.Add(raw.elems.Where(x => !x.Valid).Select(x => (x, doc.Name)).ToList());
                     rawNonValid.Add(result.nonValid.Select(x => (x, doc.Name)).ToList());
-                    sl.Unlock(); //---------
+                    sl.Unlock();
                 }
             );
             return (rawAnnex.SelectMany(x => x).ToList(), rawNonValid.SelectMany(x => x).ToList());
@@ -104,16 +102,23 @@ namespace MathCalcPrice
         {
             _db?.Dispose(); // освобождение хендлов
 
-            try
+            if(SelectedObjects.SelectedCalcObject != null)
             {
-                await Task.Run(CreateExcelRSO);
+                //try
+                //{
+                //    await Task.Run(CreateExcelRSO);
+                //}
+                //catch (Exception ex)
+                //{
+                //    Dispatcher.Invoke(() =>
+                //    {
+                //        MessageBox.Show(ex.Message);
+                //    });
+                //}
             }
-            catch (Exception ex)
+            else
             {
-                Dispatcher.Invoke(() =>
-                {
-                    MessageBox.Show(ex.Message);
-                });
+                MessageBox.Show("Выберите объект !!");
             }
         }
     }

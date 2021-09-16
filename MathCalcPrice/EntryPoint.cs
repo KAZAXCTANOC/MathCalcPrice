@@ -26,6 +26,8 @@ namespace MathCalcPrice
             UIApplication uiApp = commandData.Application;
             LinkFile linkFile = new LinkFile(uiApp.ActiveUIDocument.Document);
 
+            StaticLinkedFile.linkFile = linkFile;
+
             Thread thread = new Thread(() => {
                 Window window = new MainWindow(linkFile);
                 window.ShowDialog();
@@ -40,7 +42,6 @@ namespace MathCalcPrice
             {
                 thread.Abort();
             }
-
             return Result.Succeeded;
         }
     }

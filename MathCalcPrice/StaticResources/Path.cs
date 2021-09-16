@@ -12,7 +12,7 @@ namespace MathCalcPrice.StaticResources
 
         public static readonly string CalcDbExcelPath = Path.Combine(MainDir, "bd_calc.xlsx");
 
-        public static readonly string CalcDbTemplateExcelPath = Path.Combine(MainDir, "calc_template.xlsx");
+        public static string CalcDbTemplateExcelPath = Path.Combine(MainDir, "calc_template.xlsx");
 
         public static readonly string ResultPath = Path.Combine(MainDir, "Result");
 

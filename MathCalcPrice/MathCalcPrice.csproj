@@ -156,8 +156,15 @@
     <Compile Include="Service\Interfaces\IExcelDataService.cs" />
     <Compile Include="Service\Interfaces\ICalculatorTemplate.cs" />
     <Compile Include="SpinLock.cs" />
+    <Compile Include="StaticLinkedFile.cs" />
     <Compile Include="StaticResources\Cache.cs" />
     <Compile Include="StaticResources\Path.cs" />
+    <Compile Include="StaticResources\SelectedObjects.cs" />
+    <Compile Include="ViewModels\BaseViewModel.cs" />
+    <Compile Include="ViewModels\Commands\BaseCommand.cs" />
+    <Compile Include="ViewModels\Entity\CalcObject.cs" />
+    <Compile Include="ViewModels\LambdaCommand.cs" />
+    <Compile Include="ViewModels\MainWindowViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -167,13 +174,13 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="Resources\calc_template.xlsx" />
     <None Include="Resources\service-secret.json" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

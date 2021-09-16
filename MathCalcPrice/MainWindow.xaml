@@ -4,8 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MathCalcPrice"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             mc:Ignorable="d" xmlns:VM="clr-namespace:MathCalcPrice.ViewModels" Height="403" Width="371">
+    <Window.DataContext>
+        <VM:MainWindowViewModel/>
+    </Window.DataContext>
+
     <Grid>
         <StackPanel>
             <Grid Margin="10,5">
@@ -13,19 +16,57 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock FontFamily="Roboto" FontSize="16" Grid.Column="0"></TextBlock>
-                <Button FontFamily="Roboto" FontSize="16" Grid.Column="1">Указать путь до файла</Button>
+                <TextBlock Text="{Binding Path, UpdateSourceTrigger=PropertyChanged}" FontFamily="Roboto" FontSize="16" Grid.Column="0"></TextBlock>
+                <Button Command="{Binding SetNewPathCommand}" FontFamily="Roboto" FontSize="16" Grid.Column="1">Указать путь до файла</Button>
             </Grid>
+
             <Label FontSize="18" FontFamily="Roboto" Foreground="Black">Объекты для обновления</Label>
-            <ListView>
+
+            <ListView SelectedItem="{Binding SelectedCalcObject}" SelectionMode="Single" ItemsSource="{Binding CalcObjects, UpdateSourceTrigger=PropertyChanged}">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="Имя объекта"/>
-                        <GridViewColumn Header="Столбцы"/>
+                        <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Имя объекта"/>
+                        <GridViewColumn Header="Столбцы">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock>
+                                        <Run Text="{Binding Positions[0]}"/><Run Text=" ;"/>
+                                        <Run Text="{Binding Positions[1]}"/><Run Text=" ;"/>
+                                        <Run Text="{Binding Positions[2]}"/><Run Text=" ;"/>
+                                        <Run Text="{Binding Positions[3]}"/>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
                     </GridView>
                 </ListView.View>
             </ListView>
-            <Button Click="Button_Click" FontSize="25" >CREATE</Button>
+
+            <Button Click="Button_Click" FontSize="25">CREATE</Button>
+
+           
+            <Ellipse Margin="0,25,0,0" Height="150" Width="150">
+                <Ellipse.RenderTransform>
+                    <RotateTransform x:Name="rotate"
+                         CenterX="75"
+                         CenterY="75"/>
+                </Ellipse.RenderTransform>
+                <Ellipse.Triggers>
+                    <EventTrigger RoutedEvent="Loaded">
+                        <BeginStoryboard>
+                            <Storyboard RepeatBehavior="Forever">
+                                <DoubleAnimation Storyboard.TargetName="rotate"
+                                     Storyboard.TargetProperty="Angle"
+                                     By="360" Duration="0:0:5"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Ellipse.Triggers>
+                <Ellipse.Fill>
+                    <ImageBrush ImageSource="C:\Users\Ippolitov\Desktop\kF0rCq9KdW8.png"/>
+                </Ellipse.Fill>
+            </Ellipse>
+
         </StackPanel>
     </Grid>
 </Window>

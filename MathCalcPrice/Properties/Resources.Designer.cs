@@ -63,16 +63,6 @@ namespace MathCalcPrice.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Byte[].
         /// </summary>
-        internal static byte[] calc_template {
-            get {
-                object obj = ResourceManager.GetObject("calc_template", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Byte[].
-        /// </summary>
         internal static byte[] service_secret {
             get {
                 object obj = ResourceManager.GetObject("service_secret", resourceCulture);

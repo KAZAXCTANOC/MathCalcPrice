@@ -1,6 +1,7 @@
 ﻿using MathCalcPrice.Entity;
 using MathCalcPrice.RevitsUtils;
 using MathCalcPrice.Service.Interfaces;
+using MathCalcPrice.StaticResources;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
@@ -72,31 +73,30 @@ namespace MathCalcPrice.Service
                 Dictionary<int, string> WorkNames = new Dictionary<int, string>();
                 var worksheet = p.Workbook.Worksheets["Справочник цен"];
 
-                int y = 3;
-
-                while (worksheet.Cells[$"C{y}"].Value != null)
-                {
-                    WorkNames.Add(y, worksheet.Cells[$"C{y}"].Value.ToString());
-                    y++;
-                }
-
                 if (worksheet is null) throw new Exception("Шаблон калькулятора: Лист 'Справочник цен' или 'Калькулятор затрат' не был найден");
                 else
                 {
+                    int y = 3;
+                    while (worksheet.Cells[$"C{y}"].Value != null)
+                    {
+                        WorkNames.Add(y, worksheet.Cells[$"C{y}"].Value.ToString());
+                        y++;
+                    }
+
                     for (int i = 0; data.Count > i; i++)
                     {
                         foreach (var item in WorkNames)
                         {
                             if (item.Value == data[i].WorkName)
                             {
-                                if (worksheet.Cells[$"H{item.Key}"].Value.ToString().Trim(' ') == "Проект")
+                                if (worksheet.Cells[$"{SelectedObjects.SelectedCalcObject.Positions[3]}{item.Key}"].Value.ToString().Trim(' ') == "Проект")
                                 {
                                     var Item = data[i];
                                     if (Item is null) continue;
 
-                                    worksheet.Cells[$"E{item.Key}"].Value = Item.Volume;
-                                    worksheet.Cells[$"F{item.Key}"].Value = Item.Value;
-                                    worksheet.Cells[$"G{item.Key}"].Value = Item.MaterialCost;
+                                    worksheet.Cells[$"{SelectedObjects.SelectedCalcObject.Positions[0]}{item.Key}"].Value = Item.Volume;
+                                    worksheet.Cells[$"{SelectedObjects.SelectedCalcObject.Positions[1]}{item.Key}"].Value = Item.Value;
+                                    worksheet.Cells[$"{SelectedObjects.SelectedCalcObject.Positions[2]}{item.Key}"].Value = Item.MaterialCost;
                                 }
                             }
                         }
