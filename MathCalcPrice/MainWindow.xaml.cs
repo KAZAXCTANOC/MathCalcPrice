@@ -5,11 +5,13 @@ using MathCalcPrice.Service;
 using MathCalcPrice.StaticResources;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
+using Path = System.IO.Path;
 
 namespace MathCalcPrice
 {
@@ -31,7 +33,7 @@ namespace MathCalcPrice
             _settings.LinkedFiles = _mainFile.GetDocuments(true).Select(x => new LinkFile(x)).OrderBy(x => x.Name).ToList();
         }
 
-        private void CreateExcelRSO()
+        private void CreateExcelRSOAsync()
         {
             LoadDataFromExcels();
 
@@ -48,7 +50,7 @@ namespace MathCalcPrice
 
         public (List<AnnexElement> AnnexResult, List<(ElementTemp e, string docName)> NonValid) GetElemsForRSO()
         {
-            SpinLock sl = new SpinLock();
+            //SpinLock sl = new SpinLock();
             List<List<AnnexElement>> rawAnnex = new List<List<AnnexElement>>();
             List<List<(ElementTemp element, string docName)>> rawNonValid = new List<List<(ElementTemp element, string docName)>>();
             Annex annex = new Annex(_db);
@@ -61,12 +63,12 @@ namespace MathCalcPrice
 
                     var raw = ext.Work(doc.Doc, _db);
                     var result = annex.ElementsHandling(raw.elems.Where(x => x.Valid).ToList(), _settings);
-                    sl.Lock(); 
+                    //sl.Lock(); 
                     count++;
                     rawAnnex.Add(result.result);
                     rawNonValid.Add(raw.elems.Where(x => !x.Valid).Select(x => (x, doc.Name)).ToList());
                     rawNonValid.Add(result.nonValid.Select(x => (x, doc.Name)).ToList());
-                    sl.Unlock();
+                    //sl.Unlock();
                 }
             );
             return (rawAnnex.SelectMany(x => x).ToList(), rawNonValid.SelectMany(x => x).ToList());
@@ -95,7 +97,7 @@ namespace MathCalcPrice
 
         private bool CheckStatus(IDownloadProgress progress, string path)
         {
-            return progress.Status == Google.Apis.Download.DownloadStatus.Completed;
+            return progress.Status == DownloadStatus.Completed;
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)
@@ -104,22 +106,40 @@ namespace MathCalcPrice
 
             if(SelectedObjects.SelectedCalcObject != null)
             {
-                //try
-                //{
-                //    await Task.Run(CreateExcelRSO);
-                //}
-                //catch (Exception ex)
-                //{
-                //    Dispatcher.Invoke(() =>
-                //    {
-                //        MessageBox.Show(ex.Message);
-                //    });
-                //}
+                try
+                {
+                    await Task.Run(CreateExcelRSOAsync);
+                }
+                catch (Exception ex)
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        MessageBox.Show(ex.Message);
+                    });
+                }
             }
             else
             {
                 MessageBox.Show("Выберите объект !!");
             }
+        }
+
+        private void AnimStart()
+        {
+            var da = new DoubleAnimation(360, 0, new Duration(TimeSpan.FromSeconds(5)));
+            var rt = new RotateTransform(360,75,75);
+            MyEllipse.RenderTransform = rt;
+            da.RepeatBehavior = RepeatBehavior.Forever;
+            rt.BeginAnimation(RotateTransform.AngleProperty, da);
+        }
+
+        private void AnimStop()
+        {
+            var da = new DoubleAnimation(360, 0, new Duration(TimeSpan.FromSeconds(5)));
+            da.BeginTime = null;
+            var rt = new RotateTransform(360, 75, 75);
+            MyEllipse.RenderTransform = rt;
+            rt.BeginAnimation(RotateTransform.AngleProperty, da);
         }
     }
 }

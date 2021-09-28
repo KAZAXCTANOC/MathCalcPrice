@@ -4,10 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MathCalcPrice"
-             mc:Ignorable="d" xmlns:VM="clr-namespace:MathCalcPrice.ViewModels" Height="403" Width="371">
+             mc:Ignorable="d" xmlns:VM="clr-namespace:MathCalcPrice.ViewModels" Height="512" Width="582">
     <Window.DataContext>
         <VM:MainWindowViewModel/>
     </Window.DataContext>
+    
     <Grid>
         <StackPanel>
             <Grid Margin="10,5">
@@ -41,32 +42,16 @@
                 </ListView.View>
             </ListView>
 
-            <Button Click="Button_Click" FontSize="25">CREATE</Button>
+            <Button Margin="0,5,0,5" Click="Button_Click" FontSize="25">CREATE</Button>
 
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                <Ellipse x:Name="MyEllipse" Margin="80,5,80,80" Height="150" Width="150">
+                    <Ellipse.Fill>
+                        <ImageBrush ImageSource="C:\Users\Ippolitov\Desktop\kF0rCq9KdW8.png"/>
+                    </Ellipse.Fill>
+                </Ellipse>
+            </StackPanel>
 
-            <Ellipse Margin="0,25,0,0" Height="150" Width="150">
-                <Ellipse.Triggers>
-                    <EventTrigger RoutedEvent="Loaded">
-                        <BeginStoryboard>
-                            <Storyboard RepeatBehavior="Forever">
-                                <DoubleAnimation Storyboard.TargetName="rotate"
-                                     Storyboard.TargetProperty="Angle"
-                                     By="360" Duration="0:0:5"/>
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </EventTrigger>
-                </Ellipse.Triggers>
-
-                <Ellipse.RenderTransform>
-                    <RotateTransform x:Name="rotate"
-                             CenterX="75"
-                             CenterY="75"/>
-                </Ellipse.RenderTransform>
-
-                <Ellipse.Fill>
-                    <ImageBrush ImageSource="C:\Users\Ippolitov\Desktop\kF0rCq9KdW8.png"/>
-                </Ellipse.Fill>
-            </Ellipse>
 
         </StackPanel>
     </Grid>
