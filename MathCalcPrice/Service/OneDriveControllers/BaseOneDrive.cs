@@ -16,7 +16,7 @@ namespace MathCalcPrice.Service.OneDriveControllers
         private static string TenantId = "8a648ae3-f42e-4858-b848-ef62d3422f6d";
         private static string access_token { get; set; }
 
-        public GraphServiceClient SingAndReturnMe(string userName = "n.ognev@bimprogress.team", string password = "Gfgekz2002")
+        public static GraphServiceClient SingAndReturnMe(string userName = "n.ognev@bimprogress.team", string password = "Gfgekz2002")
         {
             string authority = string.Concat(Instance, TenantId);
             string resource = "https://graph.microsoft.com";

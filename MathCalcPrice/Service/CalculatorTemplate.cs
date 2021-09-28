@@ -45,8 +45,6 @@ namespace MathCalcPrice.Service
                 var worksheet = p.Workbook.Worksheets["Калькулятор затрат"];
                 line = WriteMainInformation(worksheet, line);
 
-                p.SaveAs(new System.IO.FileInfo(path));
-
                 Update(_pathToTemplate, "", _calculatorUpdateEntities, Path);
             }
             return path;
@@ -67,7 +65,7 @@ namespace MathCalcPrice.Service
 
         public bool Update(string template, string realObjectName, List<CalculatorUpdateEntity> data, string Path)
         {
-            var path = System.IO.Path.ChangeExtension(Path.TrimEnd('.') + "OLEG.", "xlsx");
+            var path = System.IO.Path.ChangeExtension(Path.TrimEnd('.') + "RSO.", "xlsx");
             using (var p = new ExcelPackage(new System.IO.FileInfo(template)))
             {
                 Dictionary<int, string> WorkNames = new Dictionary<int, string>();

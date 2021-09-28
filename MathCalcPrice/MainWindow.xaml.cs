@@ -2,6 +2,7 @@
 using MathCalcPrice.Entity;
 using MathCalcPrice.RevitsUtils;
 using MathCalcPrice.Service;
+using MathCalcPrice.Service.OneDriveControllers;
 using MathCalcPrice.StaticResources;
 using System;
 using System.Collections.Generic;
@@ -33,9 +34,23 @@ namespace MathCalcPrice
             _settings.LinkedFiles = _mainFile.GetDocuments(true).Select(x => new LinkFile(x)).OrderBy(x => x.Name).ToList();
         }
 
-        private void CreateExcelRSOAsync()
+        private async Task CreateExcelRSOAsync()
         {
-            LoadDataFromExcels();
+            if (IsGoogleCheked.IsChecked == true && IsOneDriveCheked.IsChecked == true)
+            {
+                MessageBox.Show("Выберите один способ загрузки данных");
+            }
+            else
+            { 
+                if (IsGoogleCheked.IsChecked == true)
+                {
+                    LoadDataFromExcels();
+                }
+                else
+                {
+                    await LoadDataFromOneDrive();
+                }
+            }
 
             CalculatorTemplate wr = new CalculatorTemplate(Paths.CalcDbTemplateExcelPath);
 
@@ -44,6 +59,8 @@ namespace MathCalcPrice
             wr.Create(readyForRecording.AnnexResult, Environment.ProcessorCount);
 
             wr.Save(Path.Combine(Paths.ResultPath, $"RSO.{_mainFile.Name}{DateTime.Now}.xls".Replace(".rvt", "_").Replace(' ', '.').Replace(':', '.')));
+
+            MessageBox.Show($"Файл сохранен по пути {Path.Combine(Paths.ResultPath, $"RSO.{_mainFile.Name}{DateTime.Now}.xls".Replace(".rvt", "_").Replace(' ', '.').Replace(':', '.'))}");
 
             _db?.Dispose(); // освобождение хендлов
         }
@@ -94,6 +111,18 @@ namespace MathCalcPrice
                 });
             }).Wait();
         }
+        private async Task LoadDataFromOneDrive()
+        {
+            string pathPrices, pathGroups;
+
+            OneDriveController oneDriveController = new OneDriveController();
+            pathPrices = await OneDriveController.DowloandExcelFile("01.01.02.01.database_prices_progress.xlsx", "database_prices_progress.xlsx");
+            pathGroups = await OneDriveController.DowloandExcelFile("01.01.02.05. Список групп работ.xlsx", "spisok-grupp.xlsx");
+
+            var pathCalcDb = Paths.CalcDbExcelPath;
+            _db = Cache.Ensure(pathPrices, pathGroups, pathCalcDb, Paths.MainDir);
+            //isdone = true;
+        }
 
         private bool CheckStatus(IDownloadProgress progress, string path)
         {
@@ -104,11 +133,16 @@ namespace MathCalcPrice
         {
             _db?.Dispose(); // освобождение хендлов
 
-            if(SelectedObjects.SelectedCalcObject != null)
+            if (IsGoogleCheked.IsChecked == false && IsOneDriveCheked.IsChecked == false)
+            {
+                MessageBox.Show("Выберите один способ загрузки данных");
+            }
+
+            if (SelectedObjects.SelectedCalcObject != null)
             {
                 try
                 {
-                    await Task.Run(CreateExcelRSOAsync);
+                    await CreateExcelRSOAsync();
                 }
                 catch (Exception ex)
                 {
@@ -122,24 +156,6 @@ namespace MathCalcPrice
             {
                 MessageBox.Show("Выберите объект !!");
             }
-        }
-
-        private void AnimStart()
-        {
-            var da = new DoubleAnimation(360, 0, new Duration(TimeSpan.FromSeconds(5)));
-            var rt = new RotateTransform(360,75,75);
-            MyEllipse.RenderTransform = rt;
-            da.RepeatBehavior = RepeatBehavior.Forever;
-            rt.BeginAnimation(RotateTransform.AngleProperty, da);
-        }
-
-        private void AnimStop()
-        {
-            var da = new DoubleAnimation(360, 0, new Duration(TimeSpan.FromSeconds(5)));
-            da.BeginTime = null;
-            var rt = new RotateTransform(360, 75, 75);
-            MyEllipse.RenderTransform = rt;
-            rt.BeginAnimation(RotateTransform.AngleProperty, da);
         }
     }
 }

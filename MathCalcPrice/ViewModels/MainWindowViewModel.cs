@@ -25,8 +25,6 @@ namespace MathCalcPrice.ViewModels
             'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
         };
         #endregion
-
-        public bool Anim { get; set; } = true;
         private CalcObject selectedCalcObject { get; set; } = null;
         public CalcObject SelectedCalcObject 
         {
@@ -50,23 +48,16 @@ namespace MathCalcPrice.ViewModels
             } 
         }
 
-        private void Update()
-        {
-            OnPropertyChanged(nameof(Path));
-            OnPropertyChanged(nameof(CalcObjects));
-        }
-
         public ICommand SetNewPathCommand { get; }
         private void SetNewPathCommandExecute(object p)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Excel|*.xls|Excel 2010|*.xlsx";
+            openFileDialog.Filter = "Excel|*.xlsx|Excel 2010|*.xlsx";
             if (openFileDialog.ShowDialog() == true)
             {
                 Paths.CalcDbTemplateExcelPath = openFileDialog.FileName;
                 
                 UbdateCalcObject();
-                Update();
             }
         }
 
@@ -74,6 +65,8 @@ namespace MathCalcPrice.ViewModels
         {
             try
             {
+                CalcObjects.Clear();
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
                 using (var p = new ExcelPackage(new FileInfo(Path)))
                 {
                     var worksheet = p.Workbook.Worksheets["Справочник цен"];
@@ -99,6 +92,7 @@ namespace MathCalcPrice.ViewModels
                         }
                         else
                         {
+                            OnPropertyChanged(nameof(CalcObjects));
                             return;
                         }
                     }
@@ -113,8 +107,6 @@ namespace MathCalcPrice.ViewModels
         public MainWindowViewModel()
         {
             SetNewPathCommand = new LambdaCommand(SetNewPathCommandExecute);
-            UbdateCalcObject();
-            Update();
         }
     }
 }
