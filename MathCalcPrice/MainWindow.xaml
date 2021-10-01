@@ -21,21 +21,32 @@
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                     <RowDefinition/>
+                    <RowDefinition/>
                 </Grid.RowDefinitions>
-                
-                <Label Grid.Row="0" Grid.Column="0" FontSize="14" Foreground="Black">Путь к шаблону:</Label>
-                <TextBlock Margin="10,0,0,0" 
+
+                <Label FontSize="14" Foreground="Black">Путь к файлу</Label>
+
+                <TextBlock Margin="10,0,0,0" x:Name="FilePath"
                            FontWeight="SemiBold" 
                            Grid.Row="1" VerticalAlignment="Center" 
                            Text="{Binding Path, UpdateSourceTrigger=PropertyChanged}"  
                            Foreground="Black" Grid.Column="0"></TextBlock>
-                <Button HorizontalAlignment="Right" Background="DarkRed" Foreground="AliceBlue" FontWeight="SemiBold" Margin="0,0,15,5" Width="200" Grid.Row="1" Command="{Binding SetNewPathCommand}" FontFamily="Roboto" FontSize="16" Grid.Column="1">Указать путь до файла</Button>
+                
+                <Button x:Name="SelectFileButton" VerticalAlignment="Center" HorizontalAlignment="Right" Background="DarkRed" 
+                        Foreground="AliceBlue" FontWeight="SemiBold" Margin="0,0,15,0" Width="200" 
+                        Grid.Row="1" Command="{Binding SetNewPathCommand}" FontFamily="Roboto" 
+                        FontSize="16" Grid.Column="1">Указать путь до файла</Button>
+
+                <StackPanel Grid.Row="2" Grid.Column="0">
+                    <Label FontSize="14" Foreground="Black">База данных цен и список групп работ:</Label>
+
+                    <CheckBox x:Name="OnCloud" Margin="10,0,0,0" FontWeight="SemiBold">Сохранять результаты в облако</CheckBox>
+                    <CheckBox Unchecked="IsOneDriveCheked_Checked_1" Checked="IsOneDriveCheked_Checked" VerticalContentAlignment="Center" 
+                              Margin="10,5,0,0" x:Name="IsOneDriveCheked" 
+                              FontWeight="SemiBold" Content="Выбор данных с OneDrive"/>
+
+                </StackPanel>
             </Grid>
-
-            <Label FontSize="14" Foreground="Black">База данных цен и список групп работ:</Label>
-
-            <CheckBox Margin="10,0,0,5" x:Name="IsGoogleCheked" FontWeight="SemiBold" Content="Выбор данных с GoogleSheets"/>
-            <CheckBox Margin="10,0,0,0" x:Name="IsOneDriveCheked" FontWeight="SemiBold" Content="Выбор данных с OneDrive"/>
 
             <Label FontSize="14" Foreground="Black">Объекты для обновления</Label>
 

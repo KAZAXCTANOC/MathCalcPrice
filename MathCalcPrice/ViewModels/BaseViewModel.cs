@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace MathCalcPrice.ViewModels
 {
-    internal abstract class BaseViewModel : INotifyPropertyChanged, IDisposable
+    public abstract class BaseViewModel : INotifyPropertyChanged, IDisposable
     {
         //Евент при изменении свойства
         public event PropertyChangedEventHandler PropertyChanged;

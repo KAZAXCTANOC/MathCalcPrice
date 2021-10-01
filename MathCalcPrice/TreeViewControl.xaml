@@ -1,0 +1,54 @@
+﻿<Window x:Class="MathCalcPrice.TreeViewControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MathCalcPrice"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" Width="328.437">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        
+        <TreeView Grid.Row="0" SelectedItemChanged="trvMenu_SelectedItemChanged" Name="trvMenu">
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Items}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Right" Text="{Binding Title}">
+                            <TextBlock.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem x:Name="SelectListCost" Click="SelectListCost_Click" Header="Выбрать как список цен"/>
+                                    <MenuItem x:Name="SelectListJob" Click="SelectListJob_Click" Header="Выбрать как список работ"/>
+                                    <MenuItem x:Name="SelectShablon" Click="SelectShablon_Click" Header="Выбрать как шаблон для калькулятора"/>
+                                </ContextMenu>
+                            </TextBlock.ContextMenu>
+                        </TextBlock>
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+
+        <StackPanel Grid.Column="1" Margin="0,5,10,5">
+            <DockPanel LastChildFill="True">
+                <Label Width="140">Выбранный лист цен:</Label>
+                <TextBlock VerticalAlignment="Center" Text="Не установлен" x:Name="SelectedCost"/>
+            </DockPanel>
+
+            <DockPanel LastChildFill="True">
+                <Label Width="140">Выбранный лист работ:</Label>
+                <TextBlock VerticalAlignment="Center" Text="Не установлен" x:Name="SelectedJob"/>
+            </DockPanel>
+
+            <DockPanel LastChildFill="True">
+                <Label Width="140">Выбранный шаблон:</Label>
+                <TextBlock VerticalAlignment="Center" Text="Не установлен" x:Name="SelectedShablon"/>
+            </DockPanel>
+        </StackPanel>
+    </Grid>
+</Window>

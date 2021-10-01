@@ -5,11 +5,16 @@ using Google.Apis.Download;
 using Google.Apis.Upload;
 using MathCalcPrice.RevitsUtils;
 using MathCalcPrice.ExcelParsers;
+using MathCalcPrice.ViewModels.Entity;
 
 namespace MathCalcPrice.StaticResources
 {
     public static class Cache
     {
+        public static MenuItem SelectedTreeViewElement { get; set; }
+        public static MenuItem SelectedCostViewElement { get; set; }
+        public static MenuItem SelectedJobViewElement { get; set; }
+
         public static string GetHash(byte[] bytes)
         {
             var hash = MD5.Create().ComputeHash(bytes);

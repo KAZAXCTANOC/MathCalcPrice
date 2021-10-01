@@ -36,21 +36,7 @@ namespace MathCalcPrice
 
         private async Task CreateExcelRSOAsync()
         {
-            if (IsGoogleCheked.IsChecked == true && IsOneDriveCheked.IsChecked == true)
-            {
-                MessageBox.Show("Выберите один способ загрузки данных");
-            }
-            else
-            { 
-                if (IsGoogleCheked.IsChecked == true)
-                {
-                    LoadDataFromExcels();
-                }
-                else
-                {
-                    await LoadDataFromOneDrive();
-                }
-            }
+            await LoadDataFromOneDrive();
 
             CalculatorTemplate wr = new CalculatorTemplate(Paths.CalcDbTemplateExcelPath);
 
@@ -58,7 +44,12 @@ namespace MathCalcPrice
 
             wr.Create(readyForRecording.AnnexResult, Environment.ProcessorCount);
 
-            wr.Save(Path.Combine(Paths.ResultPath, $"RSO.{_mainFile.Name}{DateTime.Now}.xls".Replace(".rvt", "_").Replace(' ', '.').Replace(':', '.')));
+            var s = wr.Save(Path.Combine(Paths.ResultPath, $"RSO.{_mainFile.Name}{DateTime.Now}.xls".Replace(".rvt", "_").Replace(' ', '.').Replace(':', '.')));
+
+            if (OnCloud.IsChecked == true)
+            {
+                await OneDriveController.SaveResultsAsync(s, $"RSO.{_mainFile.Name}{DateTime.Now}.xls");
+            }
 
             MessageBox.Show($"Файл сохранен по пути {Path.Combine(Paths.ResultPath, $"RSO.{_mainFile.Name}{DateTime.Now}.xls".Replace(".rvt", "_").Replace(' ', '.').Replace(':', '.'))}");
 
@@ -91,71 +82,50 @@ namespace MathCalcPrice
             return (rawAnnex.SelectMany(x => x).ToList(), rawNonValid.SelectMany(x => x).ToList());
         }
 
-        private void LoadDataFromExcels()
-        {
-            Task.Run(() =>
-            {
-                Dispatcher.Invoke(() =>
-                {
-                    string pathPrices = default, pathGroups = default;
-                    var prices = Cache.DownloadPrices(Paths.MainDir);
-                    if (CheckStatus(prices.info, prices.fullname))
-                        pathPrices = prices.fullname;
-
-                    var groups = Cache.DownloadGroups(Paths.MainDir);
-                    if (CheckStatus(groups.info, groups.fullname))
-                        pathGroups = groups.fullname;
-
-                    var pathCalcDb = Paths.CalcDbExcelPath;
-                    _db = Cache.Ensure(pathPrices, pathGroups, pathCalcDb, Paths.MainDir);
-                });
-            }).Wait();
-        }
         private async Task LoadDataFromOneDrive()
         {
             string pathPrices, pathGroups;
 
             OneDriveController oneDriveController = new OneDriveController();
-            pathPrices = await OneDriveController.DowloandExcelFile("01.01.02.01.database_prices_progress.xlsx", "database_prices_progress.xlsx");
-            pathGroups = await OneDriveController.DowloandExcelFile("01.01.02.05. Список групп работ.xlsx", "spisok-grupp.xlsx");
+            pathPrices = await OneDriveController.DowloandExcelFile(Cache.SelectedCostViewElement, "database_prices_progress.xlsx");
+            pathGroups = await OneDriveController.DowloandExcelFile(Cache.SelectedJobViewElement, "spisok-grupp.xlsx");
 
             var pathCalcDb = Paths.CalcDbExcelPath;
             _db = Cache.Ensure(pathPrices, pathGroups, pathCalcDb, Paths.MainDir);
             //isdone = true;
         }
 
-        private bool CheckStatus(IDownloadProgress progress, string path)
-        {
-            return progress.Status == DownloadStatus.Completed;
-        }
-
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
             _db?.Dispose(); // освобождение хендлов
+            
+            await CreateExcelRSOAsync();
+        }
 
-            if (IsGoogleCheked.IsChecked == false && IsOneDriveCheked.IsChecked == false)
+        private void IsOneDriveCheked_Checked(object sender, RoutedEventArgs e)
+        {
+            if (IsOneDriveCheked.IsChecked == true)
             {
-                MessageBox.Show("Выберите один способ загрузки данных");
-            }
-
-            if (SelectedObjects.SelectedCalcObject != null)
-            {
-                try
+                SelectFileButton.IsEnabled = false;
+                TreeViewControl tree = new TreeViewControl();
+                tree.ShowDialog();
+                if (Cache.SelectedTreeViewElement != null)
                 {
-                    await CreateExcelRSOAsync();
-                }
-                catch (Exception ex)
-                {
-                    Dispatcher.Invoke(() =>
-                    {
-                        MessageBox.Show(ex.Message);
-                    });
+                    FilePath.Text = $"Файл с MicrosoftOneDrive: {Cache.SelectedTreeViewElement.Title}";
+                    Paths.CalcDbTemplateExcelPath = Task.Run(() => OneDriveController.DowloandExcelFile(Cache.SelectedTreeViewElement, "calc_template.xlsx")).Result;
                 }
             }
             else
             {
-                MessageBox.Show("Выберите объект !!");
+                FilePath.Text = null;
+                SelectFileButton.IsEnabled = true;
             }
+        }
+
+        private void IsOneDriveCheked_Checked_1(object sender, RoutedEventArgs e)
+        {
+            FilePath.Text = null;
+            SelectFileButton.IsEnabled = true;
         }
     }
 }

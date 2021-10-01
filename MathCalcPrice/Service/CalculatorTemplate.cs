@@ -1,6 +1,7 @@
 ﻿using MathCalcPrice.Entity;
 using MathCalcPrice.RevitsUtils;
 using MathCalcPrice.Service.Interfaces;
+using MathCalcPrice.Service.OneDriveControllers;
 using MathCalcPrice.StaticResources;
 using OfficeOpenXml;
 using System;
@@ -65,7 +66,7 @@ namespace MathCalcPrice.Service
 
         public bool Update(string template, string realObjectName, List<CalculatorUpdateEntity> data, string Path)
         {
-            var path = System.IO.Path.ChangeExtension(Path.TrimEnd('.') + "RSO.", "xlsx");
+            var path = System.IO.Path.ChangeExtension(Path.TrimEnd('.'), "xlsx");
             using (var p = new ExcelPackage(new System.IO.FileInfo(template)))
             {
                 Dictionary<int, string> WorkNames = new Dictionary<int, string>();

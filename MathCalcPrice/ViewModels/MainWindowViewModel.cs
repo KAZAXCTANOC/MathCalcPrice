@@ -15,10 +15,11 @@ using System.Windows.Input;
 using Microsoft.Win32;
 using OfficeOpenXml;
 using MathCalcPrice.ViewModels.Entity;
+using System.Threading;
 
 namespace MathCalcPrice.ViewModels
 {
-    class MainWindowViewModel : BaseViewModel
+    public class MainWindowViewModel : BaseViewModel
     {
         #region Enum
         char[] Collumns = {
@@ -40,12 +41,18 @@ namespace MathCalcPrice.ViewModels
         }
 
         public List<CalcObject> CalcObjects { get; set; } = new List<CalcObject>();
+        public string path = Paths.CalcDbTemplateExcelPath;
         public string Path 
         { 
             get 
             {
-                return Paths.CalcDbTemplateExcelPath;
-            } 
+                return path;
+            }
+            set
+            {
+                path = value;
+                OnPropertyChanged(nameof(Path));
+            }
         }
 
         public ICommand SetNewPathCommand { get; }
@@ -104,9 +111,21 @@ namespace MathCalcPrice.ViewModels
             }
         }
 
+        public void InfinityUbdate()
+        {
+            while(true)
+            {
+                UbdateCalcObject();
+                Thread.Sleep(5000);
+            }
+        }
+
+
         public MainWindowViewModel()
         {
             SetNewPathCommand = new LambdaCommand(SetNewPathCommandExecute);
+            Thread myThread = new Thread(new ThreadStart(InfinityUbdate));
+            myThread.Start();
         }
     }
 }

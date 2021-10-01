@@ -12,7 +12,7 @@ namespace MathCalcPrice.Service.OneDriveControllers
     abstract public class BaseOneDrive
     {
         private static string Instance = "https://login.microsoftonline.com/";
-        private static string ClientId = "f4f7d338-486e-490f-a87e-298f413f8942";
+        private static string ClientId = "34f889b6-7528-4064-8840-0c4e3b355cfd";
         private static string TenantId = "8a648ae3-f42e-4858-b848-ef62d3422f6d";
         private static string access_token { get; set; }
 
