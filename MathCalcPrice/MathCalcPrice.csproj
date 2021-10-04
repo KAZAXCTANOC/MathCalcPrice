@@ -273,9 +273,13 @@
     <Compile Include="StaticResources\Cache.cs" />
     <Compile Include="StaticResources\Path.cs" />
     <Compile Include="StaticResources\SelectedObjects.cs" />
+    <Compile Include="TreeViewControl.xaml.cs">
+      <DependentUpon>TreeViewControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\Commands\BaseCommand.cs" />
     <Compile Include="ViewModels\Entity\CalcObject.cs" />
+    <Compile Include="ViewModels\Entity\MenuItem.cs" />
     <Compile Include="ViewModels\LambdaCommand.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
   </ItemGroup>
@@ -298,6 +302,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="MainWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TreeViewControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

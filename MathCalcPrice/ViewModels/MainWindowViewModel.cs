@@ -15,10 +15,11 @@ using System.Windows.Input;
 using Microsoft.Win32;
 using OfficeOpenXml;
 using MathCalcPrice.ViewModels.Entity;
+using System.Threading;
 
 namespace MathCalcPrice.ViewModels
 {
-    class MainWindowViewModel : BaseViewModel
+    public class MainWindowViewModel : BaseViewModel
     {
         #region Enum
         char[] Collumns = {
@@ -40,12 +41,18 @@ namespace MathCalcPrice.ViewModels
         }
 
         public List<CalcObject> CalcObjects { get; set; } = new List<CalcObject>();
+        public string path = Paths.CalcDbTemplateExcelPath;
         public string Path 
         { 
             get 
             {
-                return Paths.CalcDbTemplateExcelPath;
-            } 
+                return path;
+            }
+            set
+            {
+                path = value;
+                OnPropertyChanged(nameof(Path));
+            }
         }
 
         public ICommand SetNewPathCommand { get; }
@@ -71,26 +78,31 @@ namespace MathCalcPrice.ViewModels
                 {
                     var worksheet = p.Workbook.Worksheets["Справочник цен"];
 
-                    for (int i = 0; i < Collumns.Length; i += 4)
+                    for (int i = 0; i < Collumns.Length; i += 3)
                     {
-                        if (worksheet.Cells[$"{Collumns[i]}{1}"].Value != null)
+                        try
                         {
-                            List<string> list = new List<string>();
-
-                            list.Add(Collumns[i].ToString());
-                            list.Add(Collumns[i+1].ToString());
-                            list.Add(Collumns[i+2].ToString());
-                            list.Add(Collumns[i+3].ToString());
-
-                            CalcObject calcObject = new CalcObject()
+                            if(worksheet.Cells[$"{Collumns[i]}{1}"].Value != null)
                             {
-                                Name = worksheet.Cells[$"{Collumns[i]}{1}"].Value.ToString(),
-                                Positions = list
-                            };
+                                if (worksheet.Cells[$"{Collumns[i]}{1}"].Value.ToString().Contains("Текущий объект"))
+                                {
+                                    List<string> list = new List<string>();
 
-                            CalcObjects.Add(calcObject);
+                                    list.Add(Collumns[i].ToString());
+                                    list.Add(Collumns[i + 1].ToString());
+                                    list.Add(Collumns[i + 2].ToString());
+
+                                    CalcObject calcObject = new CalcObject()
+                                    {
+                                        Name = worksheet.Cells[$"{Collumns[i]}{1}"].Value.ToString(),
+                                        Positions = list
+                                    };
+
+                                    CalcObjects.Add(calcObject);
+                                }
+                            }
                         }
-                        else
+                        catch (Exception)
                         {
                             OnPropertyChanged(nameof(CalcObjects));
                             return;
@@ -104,9 +116,21 @@ namespace MathCalcPrice.ViewModels
             }
         }
 
+        public void InfinityUbdate()
+        {
+            while(true)
+            {
+                UbdateCalcObject();
+                Thread.Sleep(10000);
+            }
+        }
+
+
         public MainWindowViewModel()
         {
             SetNewPathCommand = new LambdaCommand(SetNewPathCommandExecute);
+            Thread myThread = new Thread(new ThreadStart(InfinityUbdate));
+            myThread.Start();
         }
     }
 }

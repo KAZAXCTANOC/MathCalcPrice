@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MathCalcPrice.ViewModels.Entity
 {
-    class CalcObject
+    public class CalcObject
     {
         public string Name { get; set; }
         public List<string> Positions { get; set; }

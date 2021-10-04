@@ -1,6 +1,7 @@
 ﻿using MathCalcPrice.Entity;
 using MathCalcPrice.RevitsUtils;
 using MathCalcPrice.Service.Interfaces;
+using MathCalcPrice.Service.OneDriveControllers;
 using MathCalcPrice.StaticResources;
 using OfficeOpenXml;
 using System;
@@ -65,7 +66,7 @@ namespace MathCalcPrice.Service
 
         public bool Update(string template, string realObjectName, List<CalculatorUpdateEntity> data, string Path)
         {
-            var path = System.IO.Path.ChangeExtension(Path.TrimEnd('.') + "RSO.", "xlsx");
+            var path = System.IO.Path.ChangeExtension(Path.TrimEnd('.'), "xlsx");
             using (var p = new ExcelPackage(new System.IO.FileInfo(template)))
             {
                 Dictionary<int, string> WorkNames = new Dictionary<int, string>();
@@ -87,15 +88,14 @@ namespace MathCalcPrice.Service
                         {
                             if (item.Value == data[i].WorkName)
                             {
-                                if (worksheet.Cells[$"{SelectedObjects.SelectedCalcObject.Positions[3]}{item.Key}"].Value.ToString().Trim(' ') == "Проект")
-                                {
-                                    var Item = data[i];
-                                    if (Item is null) continue;
+                                var Item = data[i];
 
-                                    worksheet.Cells[$"{SelectedObjects.SelectedCalcObject.Positions[0]}{item.Key}"].Value = Item.Volume;
-                                    worksheet.Cells[$"{SelectedObjects.SelectedCalcObject.Positions[1]}{item.Key}"].Value = Item.Value;
-                                    worksheet.Cells[$"{SelectedObjects.SelectedCalcObject.Positions[2]}{item.Key}"].Value = Item.MaterialCost;
-                                }
+                                if (Item is null) continue;
+
+                                worksheet.Cells[$"{SelectedObjects.SelectedCalcObject.Positions[0]}{item.Key}"].Value = Item.Volume;
+                                worksheet.Cells[$"{SelectedObjects.SelectedCalcObject.Positions[1]}{item.Key}"].Value = Item.Value;
+                                worksheet.Cells[$"{SelectedObjects.SelectedCalcObject.Positions[2]}{item.Key}"].Value = Item.MaterialCost;
+
                             }
                         }
                     }

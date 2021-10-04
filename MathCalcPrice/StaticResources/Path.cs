@@ -10,7 +10,7 @@ namespace MathCalcPrice.StaticResources
 
         public static readonly string AddinDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Autodesk", "Revit", "Addins", "2019", "RSOaddin");
 
-        public static readonly string CalcDbExcelPath = Path.Combine(MainDir, "bd_calc.xlsx");
+        public static string CalcDbExcelPath { get; } = Path.Combine(MainDir, "bd_calc.xlsx");
 
         public static string CalcDbTemplateExcelPath = Path.Combine(MainDir, "calc_template.xlsx");
 
