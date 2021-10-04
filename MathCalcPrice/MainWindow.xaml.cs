@@ -1,5 +1,4 @@
-﻿using Google.Apis.Download;
-using MathCalcPrice.Entity;
+﻿using MathCalcPrice.Entity;
 using MathCalcPrice.RevitsUtils;
 using MathCalcPrice.Service;
 using MathCalcPrice.Service.OneDriveControllers;
@@ -7,11 +6,8 @@ using MathCalcPrice.StaticResources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
 using Path = System.IO.Path;
 
 namespace MathCalcPrice
@@ -36,8 +32,10 @@ namespace MathCalcPrice
 
         private async Task CreateExcelRSOAsync()
         {
+            SpinLock sl = new SpinLock();
+            sl.Lock(); 
             await LoadDataFromOneDrive();
-
+            
             CalculatorTemplate wr = new CalculatorTemplate(Paths.CalcDbTemplateExcelPath);
 
             var readyForRecording = GetElemsForRSO();
@@ -50,6 +48,8 @@ namespace MathCalcPrice
             {
                 await OneDriveController.SaveResultsAsync(s, $"RSO.{_mainFile.Name}{DateTime.Now}.xls");
             }
+            sl.Unlock();
+
 
             MessageBox.Show($"Файл сохранен по пути {Path.Combine(Paths.ResultPath, $"RSO.{_mainFile.Name}{DateTime.Now}.xls".Replace(".rvt", "_").Replace(' ', '.').Replace(':', '.'))}");
 
@@ -58,7 +58,6 @@ namespace MathCalcPrice
 
         public (List<AnnexElement> AnnexResult, List<(ElementTemp e, string docName)> NonValid) GetElemsForRSO()
         {
-            //SpinLock sl = new SpinLock();
             List<List<AnnexElement>> rawAnnex = new List<List<AnnexElement>>();
             List<List<(ElementTemp element, string docName)>> rawNonValid = new List<List<(ElementTemp element, string docName)>>();
             Annex annex = new Annex(_db);
@@ -66,7 +65,8 @@ namespace MathCalcPrice
             int count = 0;
             int countOfDocs = _settings.LinkedFiles.Where(x => x.IsChecked).Count();
             Parallel.ForEach(_settings.LinkedFiles, new ParallelOptions { MaxDegreeOfParallelism = countOfDocs > Environment.ProcessorCount ? Environment.ProcessorCount : countOfDocs },
-                (doc) => {
+                (doc) =>
+                {
                     if (!doc.IsChecked) return;
 
                     var raw = ext.Work(doc.Doc, _db);
@@ -87,6 +87,7 @@ namespace MathCalcPrice
             string pathPrices, pathGroups;
 
             OneDriveController oneDriveController = new OneDriveController();
+
             pathPrices = await OneDriveController.DowloandExcelFile(Cache.SelectedCostViewElement, "database_prices_progress.xlsx");
             pathGroups = await OneDriveController.DowloandExcelFile(Cache.SelectedJobViewElement, "spisok-grupp.xlsx");
 
@@ -98,7 +99,7 @@ namespace MathCalcPrice
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
             _db?.Dispose(); // освобождение хендлов
-            
+
             await CreateExcelRSOAsync();
         }
 

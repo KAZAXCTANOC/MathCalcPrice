@@ -78,26 +78,31 @@ namespace MathCalcPrice.ViewModels
                 {
                     var worksheet = p.Workbook.Worksheets["Справочник цен"];
 
-                    for (int i = 0; i < Collumns.Length; i += 4)
+                    for (int i = 0; i < Collumns.Length; i += 3)
                     {
-                        if (worksheet.Cells[$"{Collumns[i]}{1}"].Value != null)
+                        try
                         {
-                            List<string> list = new List<string>();
-
-                            list.Add(Collumns[i].ToString());
-                            list.Add(Collumns[i+1].ToString());
-                            list.Add(Collumns[i+2].ToString());
-                            list.Add(Collumns[i+3].ToString());
-
-                            CalcObject calcObject = new CalcObject()
+                            if(worksheet.Cells[$"{Collumns[i]}{1}"].Value != null)
                             {
-                                Name = worksheet.Cells[$"{Collumns[i]}{1}"].Value.ToString(),
-                                Positions = list
-                            };
+                                if (worksheet.Cells[$"{Collumns[i]}{1}"].Value.ToString().Contains("Текущий объект"))
+                                {
+                                    List<string> list = new List<string>();
 
-                            CalcObjects.Add(calcObject);
+                                    list.Add(Collumns[i].ToString());
+                                    list.Add(Collumns[i + 1].ToString());
+                                    list.Add(Collumns[i + 2].ToString());
+
+                                    CalcObject calcObject = new CalcObject()
+                                    {
+                                        Name = worksheet.Cells[$"{Collumns[i]}{1}"].Value.ToString(),
+                                        Positions = list
+                                    };
+
+                                    CalcObjects.Add(calcObject);
+                                }
+                            }
                         }
-                        else
+                        catch (Exception)
                         {
                             OnPropertyChanged(nameof(CalcObjects));
                             return;
@@ -116,7 +121,7 @@ namespace MathCalcPrice.ViewModels
             while(true)
             {
                 UbdateCalcObject();
-                Thread.Sleep(5000);
+                Thread.Sleep(10000);
             }
         }
 

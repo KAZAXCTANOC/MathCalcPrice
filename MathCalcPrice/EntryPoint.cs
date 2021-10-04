@@ -48,6 +48,7 @@ namespace MathCalcPrice
             catch (Exception e)
             {
                 MessageBox.Show(e.Message);
+                return Result.Failed;
             }
             return Result.Succeeded;
         }

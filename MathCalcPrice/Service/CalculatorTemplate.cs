@@ -88,15 +88,14 @@ namespace MathCalcPrice.Service
                         {
                             if (item.Value == data[i].WorkName)
                             {
-                                if (worksheet.Cells[$"{SelectedObjects.SelectedCalcObject.Positions[3]}{item.Key}"].Value.ToString().Trim(' ') == "Проект")
-                                {
-                                    var Item = data[i];
-                                    if (Item is null) continue;
+                                var Item = data[i];
 
-                                    worksheet.Cells[$"{SelectedObjects.SelectedCalcObject.Positions[0]}{item.Key}"].Value = Item.Volume;
-                                    worksheet.Cells[$"{SelectedObjects.SelectedCalcObject.Positions[1]}{item.Key}"].Value = Item.Value;
-                                    worksheet.Cells[$"{SelectedObjects.SelectedCalcObject.Positions[2]}{item.Key}"].Value = Item.MaterialCost;
-                                }
+                                if (Item is null) continue;
+
+                                worksheet.Cells[$"{SelectedObjects.SelectedCalcObject.Positions[0]}{item.Key}"].Value = Item.Volume;
+                                worksheet.Cells[$"{SelectedObjects.SelectedCalcObject.Positions[1]}{item.Key}"].Value = Item.Value;
+                                worksheet.Cells[$"{SelectedObjects.SelectedCalcObject.Positions[2]}{item.Key}"].Value = Item.MaterialCost;
+
                             }
                         }
                     }

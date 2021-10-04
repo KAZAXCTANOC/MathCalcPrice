@@ -31,7 +31,10 @@ namespace MathCalcPrice
             InitializeComponent();
             _OneDriveController = new OneDriveController();
             MenuItem Root = Task.Run(() => _OneDriveController.GetDataFromGroupAsync()).Result;
+
             Root.Items.RemoveAt(0);
+            Root.Items.RemoveAt(2);
+
             trvMenu.Items.Add(Root);
         }
 

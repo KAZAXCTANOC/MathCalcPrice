@@ -67,7 +67,6 @@
                                         <Run Text="{Binding Positions[0]}"/><Run Text=" ;"/>
                                         <Run Text="{Binding Positions[1]}"/><Run Text=" ;"/>
                                         <Run Text="{Binding Positions[2]}"/><Run Text=" ;"/>
-                                        <Run Text="{Binding Positions[3]}"/>
                                     </TextBlock>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
