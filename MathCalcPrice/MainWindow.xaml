@@ -41,9 +41,6 @@
                     <Label FontSize="14" Foreground="Black">База данных цен и список групп работ:</Label>
 
                     <CheckBox x:Name="OnCloud" Margin="10,0,0,0" FontWeight="SemiBold">Сохранять результаты в облако</CheckBox>
-                    <CheckBox Unchecked="IsOneDriveCheked_Checked_1" Checked="IsOneDriveCheked_Checked" VerticalContentAlignment="Center" 
-                              Margin="10,5,0,0" x:Name="IsOneDriveCheked" 
-                              FontWeight="SemiBold" Content="Выбор данных с OneDrive"/>
 
                 </StackPanel>
             </Grid>
