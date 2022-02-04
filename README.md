@@ -100,3 +100,8 @@ public (List<AnnexElement> AnnexResult, List<(ElementTemp e, string docName)> No
 >метод `CalculatorTemplate.Save`: просто сохранение документа
 
 **После чего выдается `MessageBox` с адрессом сохраненнго РСО**
+
+---
+# Если вдруг будут мой аккаунт OneDrive удалят 
+
+Необходимо будет в классе `BaseOneDrive` поменять логин и пароль на любой удобный для вас, а также попросить Женю (ну или кто там у вас выжвет из системных администраторов) дать этому аккаунту такой же доступ что и был у меня и на сайте Azure тебе придеться выдать самому себе разрешения для приложения, а также новый Instance, ClientId, TenantId. Все это лучше сам [загугли](https://docs.microsoft.com/ru-ru/graph/permissions-reference)
