@@ -105,22 +105,7 @@ namespace MathCalcPrice
         }
         private void IsOneDriveCheked_Checked(object sender, RoutedEventArgs e)
         {
-            if (IsOneDriveCheked.IsChecked == true)
-            {
-                SelectFileButton.IsEnabled = false;
-                TreeViewControl tree = new TreeViewControl();
-                tree.ShowDialog();
-                if (Cache.SelectedTreeViewElement != null)
-                {
-                    FilePath.Text = $"Файл с MicrosoftOneDrive: {Cache.SelectedTreeViewElement.Title}";
-                    Paths.CalcDbTemplateExcelPath = Task.Run(() => OneDriveController.DowloandExcelFile(Cache.SelectedTreeViewElement, "calc_template.xlsx")).Result;
-                }
-            }
-            else
-            {
-                FilePath.Text = null;
-                SelectFileButton.IsEnabled = true;
-            }
+
         }
         private void IsOneDriveCheked_Checked_1(object sender, RoutedEventArgs e)
         {
