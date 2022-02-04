@@ -6,6 +6,7 @@ using MathCalcPrice.StaticResources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Path = System.IO.Path;
@@ -29,18 +30,23 @@ namespace MathCalcPrice
             _mainFile = linkFile;
             _settings.LinkedFiles = _mainFile.GetDocuments(true).Select(x => new LinkFile(x)).OrderBy(x => x.Name).ToList();
         }
-
         private async Task CreateExcelRSOAsync()
         {
-            SpinLock sl = new SpinLock();
-            sl.Lock(); 
-            await LoadDataFromOneDrive();
-            
+            StaticLinkedFile.Logger += " ";
+            StaticLinkedFile.Logger += "Начало загрузки документов с OneDrive\n";
+            StaticLinkedFile.Logger += "Окончание загрузки документов с OneDrive\n";
+            Thread.Sleep(10000);
             CalculatorTemplate wr = new CalculatorTemplate(Paths.CalcDbTemplateExcelPath);
 
+            StaticLinkedFile.Logger += "Поиск элементов для выгрузки\n";
+            await LoadDataFromOneDrive();
             var readyForRecording = GetElemsForRSO();
+            StaticLinkedFile.Logger += "Завершение поиска с OneDrive\n";
 
+            StaticLinkedFile.Logger += "Создание калькулятора\n";
             wr.Create(readyForRecording.AnnexResult, Environment.ProcessorCount);
+            StaticLinkedFile.Logger += "Завершение...\n";
+            Thread.Sleep(10000);
 
             var s = wr.Save(Path.Combine(Paths.ResultPath, $"RSO.{_mainFile.Name}{DateTime.Now}.xls".Replace(".rvt", "_").Replace(' ', '.').Replace(':', '.')));
 
@@ -48,14 +54,11 @@ namespace MathCalcPrice
             {
                 await OneDriveController.SaveResultsAsync(s, $"RSO.{_mainFile.Name}{DateTime.Now}.xls");
             }
-            sl.Unlock();
 
-
-            MessageBox.Show($"Файл сохранен по пути {Path.Combine(Paths.ResultPath, $"RSO.{_mainFile.Name}{DateTime.Now}.xls".Replace(".rvt", "_").Replace(' ', '.').Replace(':', '.'))}");
+            StaticLinkedFile.Logger += $"Файл сохранен по пути {Path.Combine(Paths.ResultPath, $"RSO.{_mainFile.Name}{DateTime.Now}.xls".Replace(".rvt", "_").Replace(' ', '.').Replace(':', '.'))}";
 
             _db?.Dispose(); // освобождение хендлов
         }
-
         public (List<AnnexElement> AnnexResult, List<(ElementTemp e, string docName)> NonValid) GetElemsForRSO()
         {
             List<List<AnnexElement>> rawAnnex = new List<List<AnnexElement>>();
@@ -81,7 +84,6 @@ namespace MathCalcPrice
             );
             return (rawAnnex.SelectMany(x => x).ToList(), rawNonValid.SelectMany(x => x).ToList());
         }
-
         private async Task LoadDataFromOneDrive()
         {
             string pathPrices, pathGroups;
@@ -95,14 +97,12 @@ namespace MathCalcPrice
             _db = Cache.Ensure(pathPrices, pathGroups, pathCalcDb, Paths.MainDir);
             //isdone = true;
         }
-
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
             _db?.Dispose(); // освобождение хендлов
 
             await CreateExcelRSOAsync();
         }
-
         private void IsOneDriveCheked_Checked(object sender, RoutedEventArgs e)
         {
             if (IsOneDriveCheked.IsChecked == true)
@@ -122,7 +122,6 @@ namespace MathCalcPrice
                 SelectFileButton.IsEnabled = true;
             }
         }
-
         private void IsOneDriveCheked_Checked_1(object sender, RoutedEventArgs e)
         {
             FilePath.Text = null;
