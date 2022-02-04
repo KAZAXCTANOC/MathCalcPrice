@@ -24,7 +24,6 @@ namespace MathCalcPrice
     {
         public MenuItem selectedMenuItem { get; set; }
 
-
         OneDriveController _OneDriveController;
         public TreeViewControl()
         {
@@ -33,7 +32,6 @@ namespace MathCalcPrice
             MenuItem Root = Task.Run(() => _OneDriveController.GetDataFromGroupAsync()).Result;
 
             Root.Items.RemoveAt(0);
-            Root.Items.RemoveAt(2);
 
             trvMenu.Items.Add(Root);
         }
@@ -54,7 +52,7 @@ namespace MathCalcPrice
                 Cache.SelectedCostViewElement = null;
                 SelectedCost.Text = "Неверный формат файла";
             }
-
+             
         }
 
         private void SelectListJob_Click(object sender, RoutedEventArgs e)

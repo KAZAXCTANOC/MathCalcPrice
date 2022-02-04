@@ -38,8 +38,6 @@ namespace MathCalcPrice
                 thread.Start();
                 thread.Join();
 
-                thread.Abort();
-
                 if(thread.IsAlive)
                 {
                     thread.Abort();
@@ -47,8 +45,8 @@ namespace MathCalcPrice
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message);
-                return Result.Failed;
+                TaskDialog.Show("Error", e.Message);
+                return Result.Succeeded;
             }
             return Result.Succeeded;
         }

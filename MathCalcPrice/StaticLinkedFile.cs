@@ -10,5 +10,6 @@ namespace MathCalcPrice
     public static class StaticLinkedFile
     {
         public static LinkFile linkFile;
+        public static string Logger { get; set; } = " ";
     }
 }

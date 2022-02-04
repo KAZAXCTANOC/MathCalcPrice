@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MathCalcPrice"
-             mc:Ignorable="d" xmlns:VM="clr-namespace:MathCalcPrice.ViewModels" Height="315" Width="582">
+             mc:Ignorable="d" xmlns:VM="clr-namespace:MathCalcPrice.ViewModels" Height="455" Width="582">
     <Window.DataContext>
         <VM:MainWindowViewModel/>
     </Window.DataContext>
@@ -41,9 +41,6 @@
                     <Label FontSize="14" Foreground="Black">База данных цен и список групп работ:</Label>
 
                     <CheckBox x:Name="OnCloud" Margin="10,0,0,0" FontWeight="SemiBold">Сохранять результаты в облако</CheckBox>
-                    <CheckBox Unchecked="IsOneDriveCheked_Checked_1" Checked="IsOneDriveCheked_Checked" VerticalContentAlignment="Center" 
-                              Margin="10,5,0,0" x:Name="IsOneDriveCheked" 
-                              FontWeight="SemiBold" Content="Выбор данных с OneDrive"/>
 
                 </StackPanel>
             </Grid>
@@ -74,6 +71,8 @@
                     </GridView>
                 </ListView.View>
             </ListView>
+
+            <TextBlock Text="{Binding TestStr}" Height="200"></TextBlock>
 
             <Button Background="DarkRed" Foreground="AliceBlue" FontWeight="SemiBold" Margin="0,5,0,5" Click="Button_Click" FontSize="18">Расчет стоимости</Button>
         </StackPanel>

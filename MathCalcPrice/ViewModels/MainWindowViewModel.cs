@@ -21,6 +21,7 @@ namespace MathCalcPrice.ViewModels
 {
     public class MainWindowViewModel : BaseViewModel
     {
+        public string TestStr { get; set; }
         #region Enum
         char[] Collumns = {
             'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
@@ -120,8 +121,20 @@ namespace MathCalcPrice.ViewModels
         {
             while(true)
             {
+                TestStr = StaticLinkedFile.Logger;
+                OnPropertyChanged(nameof(TestStr));
                 UbdateCalcObject();
                 Thread.Sleep(10000);
+            }
+        }
+
+        public void InfinityUbdateLogger()
+        {
+            while (true)
+            {
+                TestStr = StaticLinkedFile.Logger;
+                OnPropertyChanged(nameof(TestStr));
+                Thread.Sleep(1000);
             }
         }
 
@@ -129,8 +142,13 @@ namespace MathCalcPrice.ViewModels
         public MainWindowViewModel()
         {
             SetNewPathCommand = new LambdaCommand(SetNewPathCommandExecute);
+
             Thread myThread = new Thread(new ThreadStart(InfinityUbdate));
+            Thread myThread2 = new Thread(new ThreadStart(InfinityUbdateLogger));
+
             myThread.Start();
+            myThread2.Start();
+
         }
     }
 }
