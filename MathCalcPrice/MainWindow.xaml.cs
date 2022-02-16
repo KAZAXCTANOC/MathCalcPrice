@@ -29,23 +29,20 @@ namespace MathCalcPrice
 
             _mainFile = linkFile;
             _settings.LinkedFiles = _mainFile.GetDocuments(true).Select(x => new LinkFile(x)).OrderBy(x => x.Name).ToList();
+
+            Task.Run(async () => await LoadDataFromOneDrive()).Wait();
         }
         private async Task CreateExcelRSOAsync()
         {
-            StaticLinkedFile.Logger += " ";
-            StaticLinkedFile.Logger += "Начало загрузки документов с OneDrive\n";
-            StaticLinkedFile.Logger += "Окончание загрузки документов с OneDrive\n";
+            TextMessage.Text = " ";
             Thread.Sleep(10000);
             CalculatorTemplate wr = new CalculatorTemplate(Paths.CalcDbTemplateExcelPath);
 
-            StaticLinkedFile.Logger += "Поиск элементов для выгрузки\n";
             await LoadDataFromOneDrive();
             var readyForRecording = GetElemsForRSO();
-            StaticLinkedFile.Logger += "Завершение поиска с OneDrive\n";
 
-            StaticLinkedFile.Logger += "Создание калькулятора\n";
             wr.Create(readyForRecording.AnnexResult, Environment.ProcessorCount);
-            StaticLinkedFile.Logger += "Завершение...\n";
+            
             Thread.Sleep(10000);
 
             var s = wr.Save(Path.Combine(Paths.ResultPath, $"RSO.{_mainFile.Name}{DateTime.Now}.xls".Replace(".rvt", "_").Replace(' ', '.').Replace(':', '.')));
@@ -55,7 +52,9 @@ namespace MathCalcPrice
                 await OneDriveController.SaveResultsAsync(s, $"RSO.{_mainFile.Name}{DateTime.Now}.xls");
             }
 
-            StaticLinkedFile.Logger += $"Файл сохранен по пути {Path.Combine(Paths.ResultPath, $"RSO.{_mainFile.Name}{DateTime.Now}.xls".Replace(".rvt", "_").Replace(' ', '.').Replace(':', '.'))}";
+            //StaticLinkedFile.Logger += $"Файл сохранен по пути {Path.Combine(Paths.ResultPath, $"RSO.{_mainFile.Name}{DateTime.Now}.xls".Replace(".rvt", "_").Replace(' ', '.').Replace(':', '.'))}";
+
+            TextMessage.Text = $"Файл сохранен по пути {Path.Combine(Paths.ResultPath, $"RSO.{_mainFile.Name}{DateTime.Now}.xls".Replace(".rvt", "_").Replace(' ', '.').Replace(':', '.'))}";
 
             _db?.Dispose(); // освобождение хендлов
         }
