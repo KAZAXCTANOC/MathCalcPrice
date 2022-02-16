@@ -72,7 +72,7 @@
                 </ListView.View>
             </ListView>
 
-            <TextBlock FontSize="18" FontFamily="Tahoma" x:Name="TextMessage" Height="200"></TextBlock>
+            <TextBlock Text="{Binding TestStr}" Height="200"></TextBlock>
 
             <Button Background="DarkRed" Foreground="AliceBlue" FontWeight="SemiBold" Margin="0,5,0,5" Click="Button_Click" FontSize="18">Расчет стоимости</Button>
         </StackPanel>

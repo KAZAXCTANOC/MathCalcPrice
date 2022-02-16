@@ -128,10 +128,27 @@ namespace MathCalcPrice.ViewModels
             }
         }
 
+        public void InfinityUbdateLogger()
+        {
+            while (true)
+            {
+                TestStr = StaticLinkedFile.Logger;
+                OnPropertyChanged(nameof(TestStr));
+                Thread.Sleep(1000);
+            }
+        }
+
+
         public MainWindowViewModel()
         {
             SetNewPathCommand = new LambdaCommand(SetNewPathCommandExecute);
-            UbdateCalcObject();
+
+            Thread myThread = new Thread(new ThreadStart(InfinityUbdate));
+            Thread myThread2 = new Thread(new ThreadStart(InfinityUbdateLogger));
+
+            myThread.Start();
+            myThread2.Start();
+
         }
     }
 }
