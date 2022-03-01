@@ -56,12 +56,14 @@ namespace MathCalcPrice
 
             var saveString = wr.Save(Path.Combine(Paths.ResultPath, $"RSO.{_mainFile.Name}{DateTime.Now}.xls".Replace(".rvt", "_").Replace(' ', '.').Replace(':', '.')));
 
-            var objectPoperty = await serverController.GetObjectData(SelectedObjects.SelectedCalcObject.Name);
+            var objectPoperty = await serverController.GetObjectDataAsync(SelectedObjects.SelectedCalcObject.Name);
             serverController.SaveToServer(
                 Path.Combine(saveString),
                     RevitFileSaveName, objectPoperty[0], objectPoperty[1], objectPoperty[2], objectPoperty[3], objectPoperty[4]);
 
             _db?.Dispose(); // освобождение хендлов
+            MessageBox.Show($"Расчеты закончены и сохранены по пути {saveString}", "Завершение", MessageBoxButton.OK, MessageBoxImage.Information);
+
             this.Close();
         }
         public (List<AnnexElement> AnnexResult, List<(ElementTemp e, string docName)> NonValid) GetElemsForRSO()

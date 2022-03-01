@@ -7,7 +7,10 @@ namespace MathCalcPrice.StaticResources
 {
     public static class Paths
     {
-        public static string IpAdress { get { return Task.Run(async () => await OneDriveController.GetIpAdress("MathCalcPriceServer")).Result; } }
+        public static async Task<string> GetIpAdress()
+        {
+            return await OneDriveController.GetIpAdress("MathCalcPriceServer");
+        }
 
         public static readonly string MainDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "RSO");
 

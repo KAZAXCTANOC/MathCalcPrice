@@ -22,13 +22,13 @@ namespace MathCalcPrice.Service.OneDriveControllers
 			var a2 = await me.Groups[joinedTeams.Where(el => el.DisplayName == "ООО \"Прогресс\"").FirstOrDefault().Id]
 				.Drive.Items["01ADEVTEQDRFDBBDE2MFELD2BKOHNBUWL7"].Workbook.Worksheets["Пути"].Range("A1:B10").Request().GetAsync();
 
-			var res = a2.Text.ToObject<string[][]>();
+			var itemsFromOneDrive = a2.Text.ToObject<string[][]>();
 
-			for (int i = 0; i < res.Length; i++)
+			for (int i = 0; i < itemsFromOneDrive.Length; i++)
 			{
-				if (res[i][0] == NameProject)
+				if (itemsFromOneDrive[i][0] == NameProject)
 				{
-					return res[i][1];
+					return itemsFromOneDrive[i][1];
 				}
 			}
 

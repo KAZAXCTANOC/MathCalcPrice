@@ -1,4 +1,5 @@
-﻿using MathCalcPrice.StaticResources;
+﻿using MathCalcPrice.Service.OneDriveControllers;
+using MathCalcPrice.StaticResources;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -25,8 +26,8 @@ namespace MathCalcPrice.Service.MathCalcPriceServerController
         {
             using (var client = new HttpClient())
             {
+                client.BaseAddress = new Uri($"http://192.168.9.33:8888");
 
-                client.BaseAddress = new Uri($"http://{Paths.IpAdress}");
                 using (var multipartFormDataContent = new MultipartFormDataContent())
                 {
                     var values = new[]
@@ -49,15 +50,14 @@ namespace MathCalcPrice.Service.MathCalcPriceServerController
             }
         }
 
-        public Task<string[]> GetObjectData(string nameObject)
+        public async Task<string[]> GetObjectDataAsync(string nameObject)
         {
             using (var client = new HttpClient())
             {
-
-                client.BaseAddress = new Uri($"http://192.168.69.69:8888");
+                client.BaseAddress = new Uri($"http://192.168.9.33:8888");
                 using (var multipartFormDataContent = new MultipartFormDataContent())
                 {
-                    return client.GetAsync($"DataBase/GetObjectData?NameObject={nameObject}").Result.Content.ReadAsAsync<string[]>();
+                    return await client.GetAsync($"DataBase/GetObjectData?NameObject={nameObject}").Result.Content.ReadAsAsync<string[]>();
                 }
             }
         }
