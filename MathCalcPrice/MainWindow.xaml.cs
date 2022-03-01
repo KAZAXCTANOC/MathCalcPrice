@@ -1,6 +1,7 @@
 ﻿using MathCalcPrice.Entity;
 using MathCalcPrice.RevitsUtils;
 using MathCalcPrice.Service;
+using MathCalcPrice.Service.MathCalcPriceServerController;
 using MathCalcPrice.Service.OneDriveControllers;
 using MathCalcPrice.StaticResources;
 using System;
@@ -22,41 +23,46 @@ namespace MathCalcPrice
         private LinkFile _mainFile;
         public CalculatorTemplate wr = new CalculatorTemplate(Paths.CalcDbTemplateExcelPath);
         private MaterialsDB _db;
+        private string RevitFileSaveName = "";
+        private ServerController serverController = new ServerController();
 
         public MainWindow(LinkFile linkFile)
         {
             InitializeComponent();
 
+            var revitFileNameMass = linkFile.Name.Split('_');
+            for (int i = 0; i < revitFileNameMass.Length - 1; i++) { RevitFileSaveName += revitFileNameMass[i]; }
             _mainFile = linkFile;
             _settings.LinkedFiles = _mainFile.GetDocuments(true).Select(x => new LinkFile(x)).OrderBy(x => x.Name).ToList();
 
             Task.Run(async () => await LoadDataFromOneDrive()).Wait();
+
+            Task.Run(async () => await OneDriveController.DowloandExcelFiles()).Wait();
+
+            this.Closed += MainWindow_Closed;
         }
+
+        private void MainWindow_Closed(object sender, EventArgs e)
+        {
+            _db?.Dispose(); // освобождение хендлов
+        }
+
         private async Task CreateExcelRSOAsync()
         {
-            TextMessage.Text = " ";
-            Thread.Sleep(10000);
             CalculatorTemplate wr = new CalculatorTemplate(Paths.CalcDbTemplateExcelPath);
-
-            await LoadDataFromOneDrive();
             var readyForRecording = GetElemsForRSO();
 
             wr.Create(readyForRecording.AnnexResult, Environment.ProcessorCount);
-            
-            Thread.Sleep(10000);
 
-            var s = wr.Save(Path.Combine(Paths.ResultPath, $"RSO.{_mainFile.Name}{DateTime.Now}.xls".Replace(".rvt", "_").Replace(' ', '.').Replace(':', '.')));
+            var saveString = wr.Save(Path.Combine(Paths.ResultPath, $"RSO.{_mainFile.Name}{DateTime.Now}.xls".Replace(".rvt", "_").Replace(' ', '.').Replace(':', '.')));
 
-            if (OnCloud.IsChecked == true)
-            {
-                await OneDriveController.SaveResultsAsync(s, $"RSO.{_mainFile.Name}{DateTime.Now}.xls");
-            }
-
-            //StaticLinkedFile.Logger += $"Файл сохранен по пути {Path.Combine(Paths.ResultPath, $"RSO.{_mainFile.Name}{DateTime.Now}.xls".Replace(".rvt", "_").Replace(' ', '.').Replace(':', '.'))}";
-
-            TextMessage.Text = $"Файл сохранен по пути {Path.Combine(Paths.ResultPath, $"RSO.{_mainFile.Name}{DateTime.Now}.xls".Replace(".rvt", "_").Replace(' ', '.').Replace(':', '.'))}";
+            var objectPoperty = await serverController.GetObjectData(SelectedObjects.SelectedCalcObject.Name);
+            serverController.SaveToServer(
+                Path.Combine(saveString),
+                    RevitFileSaveName, objectPoperty[0], objectPoperty[1], objectPoperty[2], objectPoperty[3], objectPoperty[4]);
 
             _db?.Dispose(); // освобождение хендлов
+            this.Close();
         }
         public (List<AnnexElement> AnnexResult, List<(ElementTemp e, string docName)> NonValid) GetElemsForRSO()
         {
@@ -87,29 +93,19 @@ namespace MathCalcPrice
         {
             string pathPrices, pathGroups;
 
-            OneDriveController oneDriveController = new OneDriveController();
-
-            pathPrices = await OneDriveController.DowloandExcelFile(Cache.SelectedCostViewElement, "database_prices_progress.xlsx");
-            pathGroups = await OneDriveController.DowloandExcelFile(Cache.SelectedJobViewElement, "spisok-grupp.xlsx");
+            pathPrices = await OneDriveController.DowloandExcelFile("01N2KAJ4PBJXRHT5QQ6ZCYPTTKRYQJ4BRY", "database_prices_progress.xlsx");
+            pathGroups = await OneDriveController.DowloandExcelFile("01N2KAJ4KMDIY67A4TFNC3MT4WNQIQMQ3Q", "spisok-grupp.xlsx");
 
             var pathCalcDb = Paths.CalcDbExcelPath;
             _db = Cache.Ensure(pathPrices, pathGroups, pathCalcDb, Paths.MainDir);
-            //isdone = true;
+
         }
+
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
             _db?.Dispose(); // освобождение хендлов
-
+            Task.Run(async () => await LoadDataFromOneDrive()).Wait();
             await CreateExcelRSOAsync();
-        }
-        private void IsOneDriveCheked_Checked(object sender, RoutedEventArgs e)
-        {
-
-        }
-        private void IsOneDriveCheked_Checked_1(object sender, RoutedEventArgs e)
-        {
-            FilePath.Text = null;
-            SelectFileButton.IsEnabled = true;
         }
     }
 }

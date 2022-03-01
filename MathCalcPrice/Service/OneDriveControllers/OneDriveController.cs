@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -13,146 +14,92 @@ namespace MathCalcPrice.Service.OneDriveControllers
 {
 	public class OneDriveController : BaseOneDrive
 	{
-		public static async Task<string> DowloandExcelFile(MenuItem file, string saveName)
+		public static async Task<string> GetIpAdress(string NameProject)
 		{
-			try
+			//01ADEVTEQDRFDBBDE2MFELD2BKOHNBUWL7
+			var me = SingAndReturnMe();
+			var joinedTeams = await me.Me.JoinedTeams.Request().GetAsync();
+			var a2 = await me.Groups[joinedTeams.Where(el => el.DisplayName == "ООО \"Прогресс\"").FirstOrDefault().Id]
+				.Drive.Items["01ADEVTEQDRFDBBDE2MFELD2BKOHNBUWL7"].Workbook.Worksheets["Пути"].Range("A1:B10").Request().GetAsync();
+
+			var res = a2.Text.ToObject<string[][]>();
+
+			for (int i = 0; i < res.Length; i++)
 			{
-				var me = SingAndReturnMe();
-				Stream aw2 = null;
-
-				try
+				if (res[i][0] == NameProject)
 				{
-					aw2 = await me.Groups["fa78a005-e9e8-4aa4-b01a-94d0d0c19fc5"].Drive.Items[file.Id].Content.Request().GetAsync();
-				}
-				catch (Exception)
-				{
-					aw2 = await me.Groups["892eb031-5560-4d2c-9142-0030091aabfa"].Drive.Items[file.Id].Content.Request().GetAsync();
-				}
-				var fullName = Path.Combine(Paths.MainDir, saveName);
-				using (var fileStream = new FileStream(fullName, FileMode.Create, FileAccess.ReadWrite))
-				{
-					aw2.CopyTo(fileStream);
-				}
-				aw2.Dispose();
-				return fullName;
-			}
-			catch (Exception e) { throw e; }
-		}
-		public async Task<MenuItem> GetDataFromGroupAsync()
-		{
-			GraphServiceClient Iam = SingAndReturnMe();
-			var groups = await Iam.Groups.Request().GetAsync();
-			MenuItem root = new MenuItem() { Title = "Меню" };
-			foreach (var group in groups.CurrentPage)
-			{
-				Console.WriteLine($"Группа: {group.DisplayName} Id: {group.Id}");
-
-				if (group.DisplayName == "ООО \"Прогресс\"")
-				{
-					MenuItem childItem1 = new MenuItem() { Title = group.DisplayName, Id = group.Id };
-					var drive1 = await Iam.Groups[group.Id].Drives.Request().GetAsync();
-					foreach (var driveitem1 in drive1)
-					{
-						var drive2 = await Iam.Groups[group.Id].Drives[driveitem1.Id].Root.Children.Request().GetAsync();
-
-						foreach (var driveitem2 in drive2)
-						{
-							Console.WriteLine($"\t\t → {driveitem2.ODataType}: {driveitem2.Name} Id: {driveitem2.Id}");
-
-							//
-							MenuItem childItem2 = new MenuItem() { Title = driveitem2.Name, Id = driveitem2.Id };
-							//
-							var drive3 = await Iam.Groups[group.Id].Drives[driveitem1.Id].Items[driveitem2.Id].Children.Request().GetAsync();
-
-							foreach (var driveitem3 in drive3)
-							{
-								Console.WriteLine($"\t\t\t → {driveitem3.ODataType}: {driveitem3.Name} Id: {driveitem3.Id}");
-								//
-								MenuItem childItem3 = new MenuItem() { Title = driveitem3.Name, Id = driveitem3.Id };
-								//
-
-								var drive4 = await Iam.Groups[group.Id].Drives[driveitem1.Id].Items[driveitem3.Id].Children.Request().GetAsync();
-								foreach (var driveitem4 in drive4)
-								{
-									Console.WriteLine($"\t\t\t\t → {driveitem4.ODataType}: {driveitem4.Name} Id: {driveitem4.Id}");
-									//
-									MenuItem childItem4 = new MenuItem() { Title = driveitem4.Name, Id = driveitem4.Id };
-									//
-
-									var drive5 = await Iam.Groups[group.Id].Drives[driveitem1.Id].Items[driveitem4.Id].Children.Request().GetAsync();
-									foreach (var driveitem5 in drive5)
-									{
-										Console.WriteLine($"\t\t\t\t → {driveitem5.ODataType}: {driveitem5.Name} Id: {driveitem5.Id}");
-										//
-										MenuItem childItem5 = new MenuItem() { Title = driveitem5.Name, Id = driveitem5.Id };
-										//
-										childItem4.Items.Add(childItem5);
-									}
-									childItem3.Items.Add(childItem4);
-								}
-								childItem2.Items.Add(childItem3);
-							}
-							childItem1.Items.Add(childItem2);
-						}
-						root.Items.Add(childItem1);
-					}
-				}
-				if (group.DisplayName == "BIM Отдел")
-				{
-					MenuItem childItem1 = new MenuItem() { Title = group.DisplayName, Id = group.Id };
-
-					var drive1 = await Iam.Groups[group.Id].Drives.Request().GetAsync();
-
-					foreach (var driveitem1 in drive1)
-					{
-						if (drive1.CurrentPage.Count == 0) continue;
-						var drive2 = await Iam.Groups[group.Id].Drives[driveitem1.Id].Root.Children.Request().GetAsync();
-
-						foreach (var driveitem2 in drive2)
-						{
-							Console.WriteLine($"\t\t → {driveitem2.ODataType}: {driveitem2.Name} Id: {driveitem2.Id}");
-
-							//
-							MenuItem childItem2 = new MenuItem() { Title = driveitem2.Name, Id = driveitem2.Id };
-							//
-							var drive3 = await Iam.Groups[group.Id].Drives[driveitem1.Id].Items[driveitem2.Id].Children.Request().GetAsync();
-
-							foreach (var driveitem3 in drive3)
-							{
-								Console.WriteLine($"\t\t\t → {driveitem3.ODataType}: {driveitem3.Name} Id: {driveitem3.Id}");
-								//
-								MenuItem childItem3 = new MenuItem() { Title = driveitem3.Name, Id = driveitem3.Id };
-								//
-
-								var drive4 = await Iam.Groups[group.Id].Drives[driveitem1.Id].Items[driveitem3.Id].Children.Request().GetAsync();
-								foreach (var driveitem4 in drive4)
-								{
-									Console.WriteLine($"\t\t\t\t → {driveitem4.ODataType}: {driveitem4.Name} Id: {driveitem4.Id}");
-									//
-									MenuItem childItem4 = new MenuItem() { Title = driveitem4.Name, Id = driveitem4.Id };
-									//
-
-									var drive5 = await Iam.Groups[group.Id].Drives[driveitem1.Id].Items[driveitem4.Id].Children.Request().GetAsync();
-									foreach (var driveitem5 in drive5)
-									{
-										Console.WriteLine($"\t\t\t\t → {driveitem5.ODataType}: {driveitem5.Name} Id: {driveitem5.Id}");
-										//
-										MenuItem childItem5 = new MenuItem() { Title = driveitem5.Name, Id = driveitem5.Id };
-										//
-										childItem4.Items.Add(childItem5);
-									}
-									childItem3.Items.Add(childItem4);
-								}
-								childItem2.Items.Add(childItem3);
-							}
-							childItem1.Items.Add(childItem2);
-						}
-						root.Items.Add(childItem1);
-					}
+					return res[i][1];
 				}
 			}
-			return root;
+
+			return null;
 		}
+		public static async Task<string[]> GetPathToSaveObjectAsync()
+		{
+			//01ADEVTETHFZD5W3FJKVH2KWKWYSR6F54V
+			var me = SingAndReturnMe();
+			var joinedTeams = await me.Me.JoinedTeams.Request().GetAsync();
+			var a2 = await me.Groups[joinedTeams.Where(el => el.DisplayName == "ООО \"Прогресс\"").FirstOrDefault().Id]
+				.Drive.Items["01ADEVTETHFZD5W3FJKVH2KWKWYSR6F54V"].Workbook.Worksheets["Пути"].Range("A1:P4").Request().GetAsync();
+
+			var itemsFromOneDrive = a2.Text.ToObject<string[][]>();
+
+			for (int i = 0; i < itemsFromOneDrive.Length; i++)
+			{
+                if (itemsFromOneDrive[i][1] == SelectedObjects.SelectedCalcObject.Name.Trim())
+                {
+					string[] massiveData = new string[5];
+					massiveData[0] = itemsFromOneDrive[i][0];
+					massiveData[1] = itemsFromOneDrive[i][1];
+					massiveData[2] = itemsFromOneDrive[i][2];
+					massiveData[3] = itemsFromOneDrive[i][3];
+					massiveData[4] = itemsFromOneDrive[i][4];
+					return massiveData;
+                }
+			}
+			return null;
+		}
+
+		public static async Task<string> DowloandExcelFile(string fileId, string saveName)
+		{
+            var me = SingAndReturnMe();
+			Stream file = null;
+
+			var joinedTeams = await me.Me.JoinedTeams.Request().GetAsync();
+            file = await me.Groups[joinedTeams.Where(el => el.DisplayName == "BIM Отдел").FirstOrDefault().Id].Drive.Items[fileId].Content.Request().GetAsync();
+            var fullName = Path.Combine(Paths.MainDir, saveName);
+            using (var fileStream = new FileStream(fullName, FileMode.Create, FileAccess.ReadWrite))
+            {
+                file.CopyTo(fileStream);
+            }
+            file.Dispose();
+            return fullName;
+        }
+
+		public static async Task DowloandExcelFiles(string saveNameCalcTempalte = "calc_template.xlsx", string bd_calc = "bd_calc.xlsx")
+		{
+			var me = SingAndReturnMe();
+			Stream file = null;
+
+			var joinedTeams = await me.Me.JoinedTeams.Request().GetAsync();
+			file = await me.Groups[joinedTeams.Where(el => el.DisplayName == "ООО \"Прогресс\"").FirstOrDefault().Id].Drive.Items["01ADEVTET6J647IDZNJVB2N56SMNAJ7YAT"].Content.Request().GetAsync();
+			var fullName = Path.Combine(Paths.MainDir, saveNameCalcTempalte);
+			using (var fileStream = new FileStream(fullName, FileMode.Create, FileAccess.ReadWrite))
+			{
+				file.CopyTo(fileStream);
+			}
+			file.Dispose();
+
+			file = await me.Groups[joinedTeams.Where(el => el.DisplayName == "BIM Отдел").FirstOrDefault().Id].Drive.Items["01N2KAJ4PKFONUSVN45JAIKMK75GGS4BIG"].Content.Request().GetAsync();
+			fullName = Path.Combine(Paths.MainDir, bd_calc);
+			using (var fileStream = new FileStream(fullName, FileMode.Create, FileAccess.ReadWrite))
+			{
+				file.CopyTo(fileStream);
+			}
+			file.Dispose();
+		}
+
+
 		public static async Task<bool> SaveResultsAsync(string path, string pathInOneDrive)
 		{
 			string Path = Regex.Replace(DateTime.Now.ToString("dd.MM.yy.HH.mm.ss"), "[^a-zA-Z0-9% ._]", string.Empty);

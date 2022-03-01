@@ -160,6 +160,9 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
     <Reference Include="System.Numerics" />
     <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
@@ -266,6 +269,7 @@
     <Compile Include="Service\ExcelDataService.cs" />
     <Compile Include="Service\Interfaces\IExcelDataService.cs" />
     <Compile Include="Service\Interfaces\ICalculatorTemplate.cs" />
+    <Compile Include="Service\MathCalcPriceServerController\ServerController.cs" />
     <Compile Include="Service\OneDriveControllers\BaseOneDrive.cs" />
     <Compile Include="Service\OneDriveControllers\OneDriveController.cs" />
     <Compile Include="SpinLock.cs" />
@@ -273,9 +277,6 @@
     <Compile Include="StaticResources\Cache.cs" />
     <Compile Include="StaticResources\Path.cs" />
     <Compile Include="StaticResources\SelectedObjects.cs" />
-    <Compile Include="TreeViewControl.xaml.cs">
-      <DependentUpon>TreeViewControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\Commands\BaseCommand.cs" />
     <Compile Include="ViewModels\Entity\CalcObject.cs" />
@@ -302,10 +303,6 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="MainWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="TreeViewControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

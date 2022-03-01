@@ -1,11 +1,14 @@
-﻿using System;
+﻿using MathCalcPrice.Service.OneDriveControllers;
+using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace MathCalcPrice.StaticResources
 {
     public static class Paths
     {
-        //C:\Users\Ippolitov\Desktop\RSO
+        public static string IpAdress { get { return Task.Run(async () => await OneDriveController.GetIpAdress("MathCalcPriceServer")).Result; } }
+
         public static readonly string MainDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "RSO");
 
         public static readonly string AddinDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Autodesk", "Revit", "Addins", "2019", "RSOaddin");
