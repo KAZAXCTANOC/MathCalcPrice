@@ -33,7 +33,7 @@ namespace MathCalcPrice
             var revitFileNameMass = linkFile.Name.Split('_');
             for (int i = 0; i < revitFileNameMass.Length - 1; i++) { RevitFileSaveName += revitFileNameMass[i]; }
             _mainFile = linkFile;
-            _settings.LinkedFiles = _mainFile.GetDocuments(true).Select(x => new LinkFile(x)).OrderBy(x => x.Name).ToList();
+            _settings.LinkedFiles = _mainFile.GetDocuments(false).Select(x => new LinkFile(x)).OrderBy(x => x.Name).ToList();
 
             Task.Run(async () => await LoadDataFromOneDrive()).Wait();
 

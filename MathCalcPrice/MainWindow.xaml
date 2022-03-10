@@ -23,8 +23,12 @@
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
+                
+                <StackPanel>
+                    <Label FontSize="9" Padding="5,0,0,0" Content="version 09.03.2022"/>
+                    <Label FontSize="14" Foreground="Black">Путь к файлу</Label>
+                </StackPanel>
 
-                <Label FontSize="14" Foreground="Black">Путь к файлу</Label>
 
                 <TextBlock Margin="10,0,0,0" x:Name="FilePath"
                            FontWeight="SemiBold" 

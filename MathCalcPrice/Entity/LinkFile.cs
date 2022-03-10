@@ -43,6 +43,11 @@ namespace MathCalcPrice.Entity
                     .Any(fileName => doc.PathName.Equals(fileName)));
         }
 
+        /// <summary>
+        /// Метод отвечающий за получение документов(моделек) из ревита
+        /// </summary>
+        /// <param name="includelinkFiles">Отвечает за подгрузку связей</param>
+        /// <returns>Список revit документов</returns>
         public List<Document> GetDocuments(bool includelinkFiles)
         {
             List<Document> docs = includelinkFiles
