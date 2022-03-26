@@ -35,8 +35,7 @@ namespace MathCalcPrice.Entity
             return elements;
         }
 
-        private string CheckEmptyString(string s)
-            => s == null || s.Trim().Length == 0 || s.Contains("null") ? "*" : s;
+        private string CheckEmptyString(string s) => s == null || s.Trim().Length == 0 || s.Contains("null") ? "*" : s;
         private (RPKShipher shipher, bool valid) CreateId(Parameter s, Parameter f, Parameter c, Parameter m, Parameter x_m, Parameter p)
         {
             var S = CheckEmptyString(s.AsString());

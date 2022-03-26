@@ -4,6 +4,7 @@ using MathCalcPrice.Service;
 using MathCalcPrice.Service.MathCalcPriceServerController;
 using MathCalcPrice.Service.OneDriveControllers;
 using MathCalcPrice.StaticResources;
+using MathCalcPrice.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,9 +27,13 @@ namespace MathCalcPrice
         private string RevitFileSaveName = "";
         private ServerController serverController = new ServerController();
 
-        public MainWindow(LinkFile linkFile)
+        public MainWindow(LinkFile linkFile, List<Groups> parameterClassifiers = null)
         {
             InitializeComponent();
+
+            var mwvm = new MainWindowViewModel();
+            mwvm.ParameterClassifiers = parameterClassifiers;
+            this.DataContext = mwvm;
 
             var revitFileNameMass = linkFile.Name.Split('_');
             for (int i = 0; i < revitFileNameMass.Length - 1; i++) { RevitFileSaveName += revitFileNameMass[i]; }
@@ -56,10 +61,13 @@ namespace MathCalcPrice
 
             var saveString = wr.Save(Path.Combine(Paths.ResultPath, $"RSO.{_mainFile.Name}{DateTime.Now}.xls".Replace(".rvt", "_").Replace(' ', '.').Replace(':', '.')));
 
-            var objectPoperty = await serverController.GetObjectDataAsync(SelectedObjects.SelectedCalcObject.Name);
-            serverController.SaveToServer(
-                Path.Combine(saveString),
-                    RevitFileSaveName, objectPoperty[0], objectPoperty[1], objectPoperty[2], objectPoperty[3], objectPoperty[4]);
+            if (OnCloud.IsChecked == true)
+            {
+                var objectPoperty = await serverController.GetObjectDataAsync(SelectedObjects.SelectedCalcObject.Name);
+                serverController.SaveToServer(
+                    Path.Combine(saveString),
+                        RevitFileSaveName, objectPoperty[0], objectPoperty[1], objectPoperty[2], objectPoperty[3], objectPoperty[4]);
+            }
 
             _db?.Dispose(); // освобождение хендлов
             MessageBox.Show($"Расчеты закончены и сохранены по пути {saveString}", "Завершение", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -89,6 +97,13 @@ namespace MathCalcPrice
                     //sl.Unlock();
                 }
             );
+            foreach (var item in rawAnnex)
+            {
+                foreach (var item2 in item)
+                {
+                    item2.ClassMaterial.ToString();
+                }
+            }
             return (rawAnnex.SelectMany(x => x).ToList(), rawNonValid.SelectMany(x => x).ToList());
         }
         private async Task LoadDataFromOneDrive()

@@ -21,6 +21,23 @@ namespace MathCalcPrice.ViewModels
 {
     public class MainWindowViewModel : BaseViewModel
     {
+        #region NonValidElements
+        public List<ParameterClassifiers> parameterClassifiers { get; set; }
+        public List<Groups> Groups;
+        public List<Groups> ParameterClassifiers
+        {
+            get
+            {
+                return Groups;
+            }
+            set
+            {
+                parameterClassifiers = value.SelectMany(el => el.parameterClassifiers).ToList();
+                parameterClassifiers = parameterClassifiers.OrderBy(el => el.GroupName).ToList();
+                Groups = value;
+            }
+        }
+        #endregion
         #region Enum
         char[] Collumns = {
             'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'

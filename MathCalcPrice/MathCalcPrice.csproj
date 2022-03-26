@@ -242,9 +242,13 @@
     <Compile Include="Entity\EnumVolumeType.cs" />
     <Compile Include="Entity\Filter.cs" />
     <Compile Include="Entity\GroupingOfWork.cs" />
+    <Compile Include="Entity\GrouppedCalculatedData.cs" />
+    <Compile Include="Entity\Groups.cs" />
     <Compile Include="Entity\LinkFile.cs" />
     <Compile Include="Entity\Material.cs" />
+    <Compile Include="Entity\ParameterClassifiers.cs" />
     <Compile Include="Entity\RPKShipher.cs" />
+    <Compile Include="Entity\SavedData.cs" />
     <Compile Include="Entity\Settings.cs" />
     <Compile Include="Entity\Volume.cs" />
     <Compile Include="Entity\WindowVolume.cs" />
@@ -274,6 +278,7 @@
     <Compile Include="RevitsUtils\GoogleDrive.cs" />
     <Compile Include="RevitsUtils\MaterialsDB.cs" />
     <Compile Include="Service\CalculatorTemplate.cs" />
+    <Compile Include="Service\ClassifiersController.cs" />
     <Compile Include="Service\ExcelDataService.cs" />
     <Compile Include="Service\Interfaces\IExcelDataService.cs" />
     <Compile Include="Service\Interfaces\ICalculatorTemplate.cs" />
@@ -283,6 +288,7 @@
     <Compile Include="SpinLock.cs" />
     <Compile Include="StaticLinkedFile.cs" />
     <Compile Include="StaticResources\Cache.cs" />
+    <Compile Include="StaticResources\NeedCategoryList.cs" />
     <Compile Include="StaticResources\Path.cs" />
     <Compile Include="StaticResources\SelectedObjects.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />

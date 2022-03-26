@@ -10,7 +10,10 @@
     </Window.DataContext>
     
     <Grid>
-        <StackPanel>
+        <TabControl>
+            <TabItem Header="РСО">
+                <Grid>
+                    <StackPanel>
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -22,10 +25,11 @@
                     <RowDefinition/>
                     <RowDefinition/>
                     <RowDefinition/>
+                    <RowDefinition/>
                 </Grid.RowDefinitions>
                 
                 <StackPanel>
-                    <Label FontSize="9" Padding="5,0,0,0" Content="version 09.03.2022"/>
+                    <Label FontSize="9" Padding="5,0,0,0" Content="version 23.03.2022"/>
                     <Label FontSize="14" Foreground="Black">Путь к файлу</Label>
                 </StackPanel>
 
@@ -35,13 +39,21 @@
                            Grid.Row="1" VerticalAlignment="Center" 
                            Text="{Binding Path, UpdateSourceTrigger=PropertyChanged}"  
                            Foreground="Black" Grid.Column="0"></TextBlock>
-                
+
                 <Button x:Name="SelectFileButton" VerticalAlignment="Center" HorizontalAlignment="Right" Background="DarkRed" 
                         Foreground="AliceBlue" FontWeight="SemiBold" Margin="0,0,15,0" Width="200" 
                         Grid.Row="1" Command="{Binding SetNewPathCommand}" FontFamily="Roboto" 
                         FontSize="16" Grid.Column="1">Указать путь до файла</Button>
 
-                <StackPanel Grid.Row="2" Grid.Column="0">
+
+                <!--<Label Grid.Row="2" FontSize="14" Foreground="Black" Content="Проверить классификаторы в модели" Grid.Column="0"/>
+                <Button VerticalAlignment="Center" HorizontalAlignment="Right" Background="DarkRed" 
+                        Foreground="AliceBlue" FontWeight="SemiBold" Margin="0,0,15,0" Width="200" 
+                        FontFamily="Roboto" Content="Проверить" 
+                        FontSize="16"
+                        Grid.Row="2" Grid.Column="1"/>-->
+
+                <StackPanel Grid.Row="3" Grid.Column="0">
                     <Label FontSize="14" Foreground="Black">База данных цен и список групп работ:</Label>
 
                     <CheckBox x:Name="OnCloud" Margin="10,0,0,0" FontWeight="SemiBold">Сохранять результаты в облако</CheckBox>
@@ -77,5 +89,13 @@
 
             <Button Background="DarkRed" Foreground="AliceBlue" FontWeight="SemiBold" Margin="0,5,0,5" Click="Button_Click" FontSize="18">Расчет стоимости</Button>
         </StackPanel>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Классификаторы">
+                <Grid>
+                    <DataGrid AutoGenerateColumns="True" ItemsSource="{Binding parameterClassifiers}" IsReadOnly="True"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>

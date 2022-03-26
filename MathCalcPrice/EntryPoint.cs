@@ -26,12 +26,19 @@ namespace MathCalcPrice
             try
             {
                 UIApplication uiApp = commandData.Application;
+                Document doc = uiApp.ActiveUIDocument.Document;
                 LinkFile linkFile = new LinkFile(uiApp.ActiveUIDocument.Document);
+
+                List<Element> myElelements = ClassifiersController.GetFilteredElementCollector(doc);
+
+                List<ParameterClassifiers> parameterClassifiers = ClassifiersController.GetParameterClassifiers(myElelements);
+
+                List<Groups> NonValid = ClassifiersController.GetValidatedSortabledClassifiers(parameterClassifiers);
 
                 StaticLinkedFile.linkFile = linkFile;
 
                 Thread thread = new Thread(() => {
-                    Window window = new MainWindow(linkFile);
+                    Window window = new MainWindow(linkFile, NonValid);
                     window.ShowDialog();
                 });
                 thread.SetApartmentState(ApartmentState.STA);
@@ -46,9 +53,9 @@ namespace MathCalcPrice
             catch (Exception e)
             {
                 TaskDialog.Show("Error", e.Message);
-                return Result.Succeeded;
+                return Result.Cancelled;
             }
-            return Result.Succeeded;
+            return Result.Cancelled;
         }
     }
 }

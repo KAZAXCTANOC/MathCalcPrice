@@ -75,7 +75,6 @@ namespace MathCalcPrice.Service.OneDriveControllers
             file.Dispose();
             return fullName;
         }
-
 		public static async Task DowloandExcelFiles(string saveNameCalcTempalte = "calc_template.xlsx", string bd_calc = "bd_calc.xlsx")
 		{
 			var me = SingAndReturnMe();
@@ -98,8 +97,6 @@ namespace MathCalcPrice.Service.OneDriveControllers
 			}
 			file.Dispose();
 		}
-
-
 		public static async Task<bool> SaveResultsAsync(string path, string pathInOneDrive)
 		{
 			string Path = Regex.Replace(DateTime.Now.ToString("dd.MM.yy.HH.mm.ss"), "[^a-zA-Z0-9% ._]", string.Empty);
