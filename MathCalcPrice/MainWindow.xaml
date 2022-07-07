@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MathCalcPrice" Topmost="True"
-             mc:Ignorable="d" xmlns:VM="clr-namespace:MathCalcPrice.ViewModels" Height="455" Width="582">
+             mc:Ignorable="d" xmlns:VM="clr-namespace:MathCalcPrice.ViewModels" Height="357" Width="582">
     <Window.DataContext>
         <VM:MainWindowViewModel/>
     </Window.DataContext>
@@ -29,7 +29,7 @@
                 </Grid.RowDefinitions>
                 
                 <StackPanel>
-                    <Label FontSize="9" Padding="5,0,0,0" Content="version 23.03.2022"/>
+                    <Label FontSize="9" Padding="5,0,0,0" Content="version 02.06.2022"/>
                     <Label FontSize="14" Foreground="Black">Путь к файлу</Label>
                 </StackPanel>
 
@@ -46,12 +46,12 @@
                         FontSize="16" Grid.Column="1">Указать путь до файла</Button>
 
 
-                <!--<Label Grid.Row="2" FontSize="14" Foreground="Black" Content="Проверить классификаторы в модели" Grid.Column="0"/>
-                <Button VerticalAlignment="Center" HorizontalAlignment="Right" Background="DarkRed" 
+                <Label Grid.Row="2" FontSize="14" Foreground="Black" Content="Проверить классификаторы в модели" Grid.Column="0"/>
+                <Button x:Name="CheckClassifier" VerticalAlignment="Center" HorizontalAlignment="Right" Background="DarkRed" 
                         Foreground="AliceBlue" FontWeight="SemiBold" Margin="0,0,15,0" Width="200" 
                         FontFamily="Roboto" Content="Проверить" 
                         FontSize="16"
-                        Grid.Row="2" Grid.Column="1"/>-->
+                        Grid.Row="2" Grid.Column="1" Click="CheckClassifier_Click"/>
 
                 <StackPanel Grid.Row="3" Grid.Column="0">
                     <Label FontSize="14" Foreground="Black">База данных цен и список групп работ:</Label>
@@ -91,11 +91,11 @@
         </StackPanel>
                 </Grid>
             </TabItem>
-            <TabItem Header="Классификаторы">
+            <!--<TabItem Header="Классификаторы">
                 <Grid>
                     <DataGrid AutoGenerateColumns="True" ItemsSource="{Binding parameterClassifiers}" IsReadOnly="True"/>
                 </Grid>
-            </TabItem>
+            </TabItem>-->
         </TabControl>
     </Grid>
 </Window>

@@ -234,7 +234,6 @@
     <Compile Include="Entity\Annex.cs" />
     <Compile Include="Entity\AnnexElement.cs" />
     <Compile Include="Entity\CalculatorEnitity.cs" />
-    <Compile Include="Entity\CalculatorUpdateEntity.cs" />
     <Compile Include="Entity\ClassMaterial.cs" />
     <Compile Include="Entity\ConstructionPhase.cs" />
     <Compile Include="Entity\Consts.cs" />
@@ -244,6 +243,7 @@
     <Compile Include="Entity\GroupingOfWork.cs" />
     <Compile Include="Entity\GrouppedCalculatedData.cs" />
     <Compile Include="Entity\Groups.cs" />
+    <Compile Include="Entity\GroupWithCount.cs" />
     <Compile Include="Entity\LinkFile.cs" />
     <Compile Include="Entity\Material.cs" />
     <Compile Include="Entity\ParameterClassifiers.cs" />
@@ -258,6 +258,9 @@
     <Compile Include="ExcelParsers\ExcelParser.cs" />
     <Compile Include="ExcelParsers\ExcelParserCalculatorEntities.cs" />
     <Compile Include="ExcelParsers\ExcelParserListWorkingGroup.cs" />
+    <Compile Include="LookUpElements.xaml.cs">
+      <DependentUpon>LookUpElements.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
@@ -275,13 +278,9 @@
     <Compile Include="RevitsUtils\ClassificatorsCache.cs" />
     <Compile Include="RevitsUtils\ElementTemp.cs" />
     <Compile Include="RevitsUtils\ExcelDocument.cs" />
-    <Compile Include="RevitsUtils\GoogleDrive.cs" />
     <Compile Include="RevitsUtils\MaterialsDB.cs" />
     <Compile Include="Service\CalculatorTemplate.cs" />
     <Compile Include="Service\ClassifiersController.cs" />
-    <Compile Include="Service\ExcelDataService.cs" />
-    <Compile Include="Service\Interfaces\IExcelDataService.cs" />
-    <Compile Include="Service\Interfaces\ICalculatorTemplate.cs" />
     <Compile Include="Service\MathCalcPriceServerController\ServerController.cs" />
     <Compile Include="Service\OneDriveControllers\BaseOneDrive.cs" />
     <Compile Include="Service\OneDriveControllers\OneDriveController.cs" />
@@ -294,8 +293,8 @@
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\Commands\BaseCommand.cs" />
     <Compile Include="ViewModels\Entity\CalcObject.cs" />
-    <Compile Include="ViewModels\Entity\MenuItem.cs" />
     <Compile Include="ViewModels\LambdaCommand.cs" />
+    <Compile Include="ViewModels\LookUpElementsViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -316,6 +315,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="LookUpElements.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

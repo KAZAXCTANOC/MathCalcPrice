@@ -1,0 +1,68 @@
+﻿<Window x:Class="MathCalcPrice.LookUpElements"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MathCalcPrice" mc:Ignorable="d" 
+             xmlns:VM="clr-namespace:MathCalcPrice.ViewModels"
+             d:DesignHeight="450" d:DesignWidth="450">
+    <Window.DataContext>
+        <VM:LookUpElementsViewModel/>
+    </Window.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <ListBox Grid.Row="0" ItemsSource="{Binding Groups}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Общее число параметров в группе "/>
+                            <TextBlock Text="{Binding GroupName}"/>
+                            <TextBlock Text=" - "/>
+                            <TextBlock Text="{Binding AllCountParameters}"/>
+                            <TextBlock Text=" из которых незаполнены\недозаполнены - "/>
+                            <TextBlock Text="{Binding CountParameters}"/>
+                        </StackPanel>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <ListBox Grid.Row="1" ItemsSource="{Binding groupWithCounts}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <Label Content="{Binding GroupName}"/>
+                        <StackPanel>
+                            <StackPanel Margin="10,0,0,0" Orientation="Horizontal">
+                                <TextBlock Text=" число незаполненных элементов - "/>
+                                <TextBlock Text="{Binding Count}"/>
+                            </StackPanel>
+
+                            <Expander IsExpanded="False">
+                                <Grid MaxHeight="300">
+                                    <ScrollViewer>
+                                        <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding Classifiers}">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Header="Классификатор конструкции" Binding="{Binding ClassConstruction}"/>
+                                                <DataGridTextColumn Header="Классификатор характеристики материала" Binding="{Binding ClassChars}"/>
+                                                <DataGridTextColumn Header="Классификатор этажа" Binding="{Binding ClassFloor}"/>
+                                                <DataGridTextColumn Header="Классификатор материала" Binding="{Binding ClassMaterial}"/>
+                                                <DataGridTextColumn Header="Классификатор параметра" Binding="{Binding ClassParams}"/>
+                                                <DataGridTextColumn Header="Классификатор секции" Binding="{Binding ClassSection}"/>
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                    </ScrollViewer>
+                                </Grid>
+                            </Expander>
+                        </StackPanel>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</Window>

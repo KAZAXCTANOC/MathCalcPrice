@@ -23,16 +23,6 @@ namespace MathCalcPrice.RevitsUtils
             _exist = true;
         }
 
-
-        public void DropCollections()
-        {
-            Db.DropCollection("ElementTemp");
-            Db.DropCollection("ExcelDocument");
-            DropExcelDbPrices();
-            DropExcelDbGroupOfWork();
-            DropExcelCalcDb();
-        }
-
         public void DropExcelDbPrices()
         {
             Db.DropCollection("ClassMaterial");
@@ -63,49 +53,10 @@ namespace MathCalcPrice.RevitsUtils
 
         public ILiteCollection<ExcelDocument> GetExcelCollection() => Db.GetCollection<ExcelDocument>("ExcelDocument");
 
-        public void InsertOne(ExcelDocument excelDoc)
-        {
-            var excelDocuments = Db.GetCollection<ExcelDocument>("ExcelDocument");
-            excelDocuments.Insert(excelDoc);
-            excelDocuments.EnsureIndex(x => x.Name);
-        }
-
-        public void InsertOne(ClassificatorsCache cache)
-        {
-            var excelDocuments = Db.GetCollection<ClassificatorsCache>("ClassificatorsCache");
-            excelDocuments.Insert(cache);
-            excelDocuments.EnsureIndex(x => x.Values);
-        }
-
-        public bool UpdateClassificatorsCache(ClassificatorsCache cache)
-        {
-            var excelDocuments = Db.GetCollection<ClassificatorsCache>("ClassificatorsCache");
-            return excelDocuments.Update(cache);
-        }
-
         public bool EnsureExcelDoc(string hash)
         {
             var findOne = Db.GetCollection<ExcelDocument>("ExcelDocument").FindOne(x => hash.Equals(x.Hash));
             return findOne != null /*&& findOne.LastChange == excelDoc.LastChange*/;
-        }
-        public void InsertMany(List<AnnexElement> elems)
-        {
-            var annexElements = Db.GetCollection<AnnexElement>("AnnexElement");
-            foreach (var el in elems)
-            {
-                annexElements.Insert(el);
-            }
-            annexElements.EnsureIndex(x => x.RPKShipher);
-        }
-
-        public void InsertMany(List<ElementTemp> elems)
-        {
-            var elemsdb = Db.GetCollection<ElementTemp>("ElementTemp");
-            foreach (var el in elems)
-            {
-                elemsdb.Insert(el);
-            }
-            elemsdb.EnsureIndex(x => x.Code);
         }
 
         public void InsertMany(List<ConstructionPhase> elems)
@@ -161,25 +112,10 @@ namespace MathCalcPrice.RevitsUtils
             return res.FindAll().ToList();
         }
 
-        public List<ElementTemp> FindAllElementTemp()
-        {
-            var res = Db.GetCollection<ElementTemp>("ElementTemp");
-            return res.FindAll().ToList();
-        }
-
         public List<ClassMaterial> FindAllClassMaterial()
         {
             var collection = Db.GetCollection<ClassMaterial>("ClassMaterial");
             return collection.FindAll().ToList();
-        }
-        public async Task<List<ClassMaterial>> FindAllClassMaterialAsync()
-        {
-            List<ClassMaterial> result = new List<ClassMaterial>();
-            await Task.Run(() => {
-                var collection = Db.GetCollection<ClassMaterial>("ClassMaterial");
-                result = collection.FindAll().ToList();
-            });
-            return result;
         }
         public List<GroupingOfWork> FindAllGroupingOfWork()
         {
@@ -199,22 +135,6 @@ namespace MathCalcPrice.RevitsUtils
         public List<ConstructionPhase> FindAllConstructionPhase()
         {
             var res = Db.GetCollection<ConstructionPhase>("ConstructionPhase");
-            return res.FindAll().ToList();
-        }
-        public ClassificatorsCache FindClassificatorsCache()
-        {
-            var res = Db.GetCollection<ClassificatorsCache>("ClassificatorsCache");
-            var ls = res.FindAll().ToList();
-            if (ls.Count > 0) return ls[0];
-
-            var cache = new ClassificatorsCache();
-            InsertOne(cache);
-            return cache;
-        }
-
-        public List<AnnexElement> FindAllAnnexElement()
-        {
-            var res = Db.GetCollection<AnnexElement>("AnnexElement");
             return res.FindAll().ToList();
         }
 

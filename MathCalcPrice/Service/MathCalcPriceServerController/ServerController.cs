@@ -25,7 +25,7 @@ namespace MathCalcPrice.Service.MathCalcPriceServerController
         {
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri($"http://192.168.9.33:8888");
+                client.BaseAddress = new Uri($"http://192.168.17.192:8888");
 
                 using (var multipartFormDataContent = new MultipartFormDataContent())
                 {
@@ -53,7 +53,7 @@ namespace MathCalcPrice.Service.MathCalcPriceServerController
         {
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri($"http://192.168.9.33:8888");
+                client.BaseAddress = new Uri($"http://192.168.17.192:8888");
                 using (var multipartFormDataContent = new MultipartFormDataContent())
                 {
                     return await client.GetAsync($"DataBase/GetObjectData?NameObject={nameObject}").Result.Content.ReadAsAsync<string[]>();

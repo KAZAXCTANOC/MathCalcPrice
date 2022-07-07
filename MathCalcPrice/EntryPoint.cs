@@ -29,16 +29,10 @@ namespace MathCalcPrice
                 Document doc = uiApp.ActiveUIDocument.Document;
                 LinkFile linkFile = new LinkFile(uiApp.ActiveUIDocument.Document);
 
-                List<Element> myElelements = ClassifiersController.GetFilteredElementCollector(doc);
-
-                List<ParameterClassifiers> parameterClassifiers = ClassifiersController.GetParameterClassifiers(myElelements);
-
-                List<Groups> NonValid = ClassifiersController.GetValidatedSortabledClassifiers(parameterClassifiers);
-
                 StaticLinkedFile.linkFile = linkFile;
 
                 Thread thread = new Thread(() => {
-                    Window window = new MainWindow(linkFile, NonValid);
+                    Window window = new MainWindow(linkFile, doc);
                     window.ShowDialog();
                 });
                 thread.SetApartmentState(ApartmentState.STA);

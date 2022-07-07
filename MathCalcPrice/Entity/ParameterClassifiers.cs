@@ -2,6 +2,7 @@
 {
     public class ParameterClassifiers
     {
+        public string Classifiers { get { return $"{ClassParams}{ClassConstruction}{ClassMaterial}{ClassSection}{ClassFloor}{ClassChars}"; } }
         public string Id { get; set; }
         public string ClassParams { get; set; }
         public string ClassConstruction { get; set; }

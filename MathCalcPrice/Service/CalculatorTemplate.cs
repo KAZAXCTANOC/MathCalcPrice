@@ -1,6 +1,5 @@
 ﻿using MathCalcPrice.Entity;
 using MathCalcPrice.RevitsUtils;
-using MathCalcPrice.Service.Interfaces;
 using MathCalcPrice.Service.OneDriveControllers;
 using MathCalcPrice.StaticResources;
 using OfficeOpenXml;
@@ -13,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace MathCalcPrice.Service
 {
-    public class CalculatorTemplate : ICalculatorTemplate
+    public class CalculatorTemplate 
     {
         #region Чушня с переменными 
         public readonly MaterialsDB _db;
@@ -205,11 +204,6 @@ namespace MathCalcPrice.Service
                     });
                 }
             }
-        }
-        public MaterialsDB Get_db()
-        {
-            ExcelDataService dataService = new ExcelDataService();
-            return dataService.LoadData();
         }
 
         #region Legacy

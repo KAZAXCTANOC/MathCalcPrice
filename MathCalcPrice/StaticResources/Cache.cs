@@ -11,18 +11,12 @@ namespace MathCalcPrice.StaticResources
 {
     public static class Cache
     {
-        public static MenuItem SelectedTreeViewElement { get; set; }
-        public static MenuItem SelectedCostViewElement { get; set; }
-        public static MenuItem SelectedJobViewElement { get; set; }
-
         public static string GetHash(byte[] bytes)
         {
             var hash = MD5.Create().ComputeHash(bytes);
             return Convert.ToBase64String(hash);
         }
-
         public static string GetHash(string filePath) => GetHash(File.ReadAllBytes(filePath));
-
         private static void CreateExcelDocs(MaterialsDB db)
         {
             var excelCollections = db.GetExcelCollection();
@@ -38,41 +32,6 @@ namespace MathCalcPrice.StaticResources
                 db.Commit();
             }
         }
-
-        private const string _docIdPrices = "1PO-D_5DW9pmE1LXU_rSnQ2EYMUch3UngfzIwx9NyPNw";
-        private const string _namePrices = "database_prices_progress.xlsx";
-
-        private const string _docIdGroups = "1aifmNyTTrHoWrSSLsn5pqOj1MXNpOlDHnm0kd9RbUmE";
-        private const string _nameGroups = "spisok-grupp.xlsx";
-
-        private const string _uploadToDir = "1tvOQiX0DSC-mch86HIdxSwJLP6ER3DJz";
-
-        private static IDownloadProgress DownloadDocument(string id, string fullname)
-        {
-            var gd = new GoogleDrive().Set(id);
-            return gd.DownloadExcel(fullname);
-        }
-
-        public static IUploadProgress Upload(string fileName)
-        {
-            var gd = new GoogleDrive();
-            return gd.UploadFile(fileName, $"РСО калькулятор {Path.GetFileNameWithoutExtension(fileName)}", _uploadToDir);
-        }
-
-        public static (string fullname, IDownloadProgress info) DownloadPrices(string localdir)
-        {
-            var fullname = Path.Combine(localdir, _namePrices);
-            File.Delete(fullname);
-            return (fullname, DownloadDocument(_docIdPrices, fullname));
-        }
-
-        public static (string fullname, IDownloadProgress info) DownloadGroups(string localdir)
-        {
-            var fullname = Path.Combine(localdir, _nameGroups);
-            File.Delete(fullname);
-            return (fullname, DownloadDocument(_docIdGroups, fullname));
-        }
-
         public static MaterialsDB Ensure(string pathPrices, string pathListOfGroup, string pathCalcDb, string dbPath)
         {
             MaterialsDB db = new MaterialsDB(dbPath);

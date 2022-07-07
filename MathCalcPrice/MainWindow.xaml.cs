@@ -1,4 +1,5 @@
-﻿using MathCalcPrice.Entity;
+﻿using Autodesk.Revit.DB;
+using MathCalcPrice.Entity;
 using MathCalcPrice.RevitsUtils;
 using MathCalcPrice.Service;
 using MathCalcPrice.Service.MathCalcPriceServerController;
@@ -20,20 +21,19 @@ namespace MathCalcPrice
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly Settings _settings = new Entity.Settings();
+        private readonly Entity.Settings _settings = new Entity.Settings();
         private LinkFile _mainFile;
         public CalculatorTemplate wr = new CalculatorTemplate(Paths.CalcDbTemplateExcelPath);
         private MaterialsDB _db;
         private string RevitFileSaveName = "";
         private ServerController serverController = new ServerController();
+        Document doc;
 
-        public MainWindow(LinkFile linkFile, List<Groups> parameterClassifiers = null)
+        public MainWindow(LinkFile linkFile, Document Doc)
         {
             InitializeComponent();
 
-            var mwvm = new MainWindowViewModel();
-            mwvm.ParameterClassifiers = parameterClassifiers;
-            this.DataContext = mwvm;
+            doc = Doc;
 
             var revitFileNameMass = linkFile.Name.Split('_');
             for (int i = 0; i < revitFileNameMass.Length - 1; i++) { RevitFileSaveName += revitFileNameMass[i]; }
@@ -64,9 +64,9 @@ namespace MathCalcPrice
             if (OnCloud.IsChecked == true)
             {
                 var objectPoperty = await serverController.GetObjectDataAsync(SelectedObjects.SelectedCalcObject.Name);
-                serverController.SaveToServer(
-                    Path.Combine(saveString),
-                        RevitFileSaveName, objectPoperty[0], objectPoperty[1], objectPoperty[2], objectPoperty[3], objectPoperty[4]);
+                    serverController.SaveToServer(
+                        Path.Combine(saveString),
+                            RevitFileSaveName, objectPoperty[0], objectPoperty[1], objectPoperty[2], objectPoperty[3], objectPoperty[4]);
             }
 
             _db?.Dispose(); // освобождение хендлов
@@ -123,6 +123,26 @@ namespace MathCalcPrice
             _db?.Dispose(); // освобождение хендлов
             Task.Run(async () => await LoadDataFromOneDrive()).Wait();
             await CreateExcelRSOAsync();
+        }
+
+        private void CheckClassifier_Click(object sender, RoutedEventArgs e)
+        {
+            List<Element> elements = ClassifiersController.GetFilteredElementCollector(doc);
+
+            List<ParameterClassifiers> parameterClassifiers = ClassifiersController.GetParameterClassifiers(elements);
+
+            List<Groups> NonValid = ClassifiersController.GetValidatedSortabledClassifiers(parameterClassifiers);
+
+            List<GroupWithCount> list = ClassifiersController.GetGroupWithCounts(NonValid);
+            if (list.Count == 0)
+            {
+                MessageBox.Show("Все классификаторы заполнены");
+            }
+            else
+            {
+                LookUpElements window = new LookUpElements(list, NonValid);
+                window.Show();
+            }
         }
     }
 }
